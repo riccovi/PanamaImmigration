@@ -1,13 +1,13 @@
 import { View } from 'react-native';
 import BottomBar from '../components/BottomBar';
 
-function EligibilityQuiz({}){
+function Profile({}){
     return (
       <View>
-        
+
         <BottomBar />
       </View>
     )
 }
 
-export default EligibilityQuiz;
+export default Profile;

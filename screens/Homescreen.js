@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { Cell, Section, TableView } from 'react-native-tableview-simple'
+import BottomBar from '../components/BottomBar';
 
 const { width } = Dimensions.get('window') //Get width of device - responsive design
 
@@ -24,13 +25,15 @@ function HomeScreen({route}){
       <ScrollView>
         <TableView>
           <Section header="" hideSeparator="true" separatorTintColor="#ccc">
-            <Text style={styles.welcome}>Welcome, username!</Text> {/* {route.params.username} */}
+            <Text style={styles.welcome}>Welcome, {route.params?.username || "Guest"}!</Text> {/* {route.params.username} */}
             <HomeScreenCell title="Why Panama" imgUri={require('../assets/panama-flag.jpg')} action={() => navigation.navigate("WhyPanama")} />
             <HomeScreenCell title="Eligibility Quiz" imgUri={require('../assets/quiz-pic.jpg')} action={() => navigation.navigate("EligibilityQuiz")} />
+            <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
             <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
           </Section>
         </TableView>
       </ScrollView>
+      <BottomBar />
     </SafeAreaView>
   )
 }
@@ -43,11 +46,11 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center'
     },
-
     welcome: {
       padding: 30,
-      fontSize: 30,
-      fontWeight: 'bold'
+      fontSize: 25,
+      fontWeight: 'bold',
+      alignSelf: 'center'
     },
 
     cellView: {
