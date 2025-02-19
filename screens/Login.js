@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, SafeAreaView, TextInput, Switch, TouchableOpacity, Alert, Modal } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system';
 
 function LogIn({navigation}){
   const [email, setEmail] = useState('');
   const [modalVisible, setModalVisible] = useState(null) // 'signup' or 'login' or 'null'
   const [password, setPassword] = useState("");
   const [newsletter, setNewsletter] = useState(false);
-
+  const filePath = FileSystem.documentDirectory + 'users.json';
 
   // Function to validate email
   const isValidEmail = (email) => {
@@ -22,14 +22,30 @@ function LogIn({navigation}){
     return passwordRegex.test(password);
   };
 
-  const getUsername = (email) => {
-    return email.split("@")[0]; // Username is set as part of email before @ sign
+  const saveUserDatatoJsonFile = async (userData) => {
+    try{
+        // Check if file exists
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let users = [];
+        // If file exists, read its content
+        if (fileExists.exists){
+            const fileContent = await FileSystem.readAsStringAsync(filePath);
+            users = JSON.parse(fileContent);
+        }
+        // Add new user data to the list of users
+        users.push(userData);
+        // Write the updated users array back to the JSON file
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(users));
+        console.log('User data saved to JSON file');
+    } catch (error){
+        console.log('Error saving user data:', error);
+    }
   };
 
   // Handle signUp button press
   const handleSignUp = async () => {
     if (!email){ // If empty email
-        Alert.alert("Missing", "Please enter an email address.");
+        Alert.alert("Missing Email", "Please enter an email address.");
         return;
     } 
     if (!isValidEmail(email)){ // Else, if invalid email
@@ -37,7 +53,7 @@ function LogIn({navigation}){
         return;
     }
     if (!password){ // Else, if empty password 
-        Alert.alert("Missing Password", "Please enter a password");
+        Alert.alert("Missing Password", "Please enter a password.");
         return;
     }
     if (!isValidPassword(password)){ // Else, if invalid password
@@ -45,11 +61,11 @@ function LogIn({navigation}){
         return;
     }
 
+    const username = email.split('@')[0]; // Username is set as part of email before @ sign
+    const userData = { email, password, username, newsletter }
     // If all valid, save to json file
-    const username = getUsername(email);
-    const newUser = { email, password, username, newsletter};
     try{
-        await AsyncStorage.setItem(email, JSON.stringify(newUser));
+        await saveUserDatatoJsonFile(userData);
         Alert.alert("Success", "Thanks for signing up! Please login.")
         setModalVisible(null);
     } catch (error){
@@ -59,22 +75,32 @@ function LogIn({navigation}){
 
   // Handle login button press
   const handleLogin = async () => {
+    if (!email || !password) {
+        Alert.alert("Missing Fields", "Please enter both an email and a password.");
+        return; 
+    }
     try{
-        const storedUser = await AsyncStorage.getItem(email);
-        if (!storedUser){ // If invalid email
-            Alert.alert("Error", "Incorrect email.");
-            return;
-        }
-        const { password: storedPassword, username } = JSON.parse(storedUser); // Check if given email matches stored password
-        if (password !== storedPassword){ // If invalid password
-            Alert.alert("Error", "Incorrect password.");
-            return;
-        }
-        // If all valid, proceed to homescreen
-        navigation.navigate("HomeScreen", {username});
+      const path = await `${FileSystem.documentDirectory}users.json`
+      const info = await FileSystem.getInfoAsync(filePath);
+      // Check if the file exists
+      if (!info.exists){
+        Alert.alert("Login Failed", "Please try again or sign up!")
+        return;
+      }
+      // Read and parse the JSON file
+      const content = await FileSystem.readAsStringAsync(path);
+      const users = JSON.parse(content);
+      // Check if corresponding details
+      const user = users.find(u => (u.email === email && u.password === password));
+      if (user){
+        Alert.alert("Login Succesful", `Welcome back, ${user.username}!`)
         setModalVisible(null);
+        navigation.navigate("HomeScreen", { username: user.username });
+      } else {
+        Alert.alert("Login Failed", "Invalid email or password.")
+      }
     } catch (error){
-        Alert.alert("Error", "Login failed.");
+      Alert.alert("Error", "An error occured while trying to log in")
     }
   }
 
@@ -120,7 +146,7 @@ function LogIn({navigation}){
                         <Text style={styles.buttonText}>Register</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(null)}>
-                        <Text>Cancel</Text>
+                        <Text style={styles.closeText}>Cancel</Text>
                     </TouchableOpacity>
                     </KeyboardAvoidingView>
                 </View>
@@ -140,7 +166,7 @@ function LogIn({navigation}){
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(null)}>
-                        <Text>Cancel</Text>
+                        <Text style={styles.closeText}>Cancel</Text>
                     </TouchableOpacity>
                     </KeyboardAvoidingView>
                 </View>
@@ -251,6 +277,9 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         marginTop: 10, 
-        alignItems: "center"
+        alignItems: "center",
     },
+    closeText: {
+        color: 'red'
+    }
   });
