@@ -2,20 +2,20 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-const BottomBar = () => {
+const BottomBar = ({ userDetails}) => {
     const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeScreen')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeScreen', { userDetails })}>
             <Icon name="home" size={24} color="white" />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile', { userDetails })}>
             <Icon name="user" size={24} color="white" />
             </TouchableOpacity>
            
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Settings')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Settings', { userDetails })}>
             <Icon name="cog" size={24} color="white" />
             </TouchableOpacity>
         </View>

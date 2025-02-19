@@ -19,13 +19,15 @@ const HomeScreenCell = ({title, imgUri, action}) => {
   )
 }
 
-function HomeScreen({route}){
+function HomeScreen({ route, navigation }){
+  const { userDetails } = route.params || {};
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView>
         <TableView>
           <Section header="" hideSeparator="true" separatorTintColor="#ccc">
-            <Text style={styles.welcome}>Welcome, {route.params?.username || "Guest"}!</Text> {/* {route.params.username} */}
+            <Text style={styles.welcome}>Welcome, {userDetails?.username || "Guest"}!</Text>
             <HomeScreenCell title="Why Panama" imgUri={require('../assets/panama-flag.jpg')} action={() => navigation.navigate("WhyPanama")} />
             <HomeScreenCell title="Eligibility Quiz" imgUri={require('../assets/quiz-pic.jpg')} action={() => navigation.navigate("EligibilityQuiz")} />
             <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
@@ -33,7 +35,7 @@ function HomeScreen({route}){
           </Section>
         </TableView>
       </ScrollView>
-      <BottomBar />
+      <BottomBar userDetails={userDetails}/>
     </SafeAreaView>
   )
 }
@@ -45,6 +47,11 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    safeArea: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: '#fff'
     },
     welcome: {
       padding: 30,

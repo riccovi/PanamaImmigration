@@ -95,7 +95,7 @@ function LogIn({navigation}){
       if (user){
         Alert.alert("Login Succesful", `Welcome back, ${user.username}!`)
         setModalVisible(null);
-        navigation.navigate("HomeScreen", { username: user.username });
+        navigation.navigate("HomeScreen", { userDetails: user });
       } else {
         Alert.alert("Login Failed", "Invalid email or password.")
       }

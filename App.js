@@ -15,8 +15,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="HomeScreen" options={{headerShown: false}} component={HomeScreen} />
         <Stack.Screen name="LogIn" options={{headerShown: false}} component={LogIn} />
+        <Stack.Screen name="HomeScreen" options={{headerShown: false}} component={HomeScreen} />
         <Stack.Screen name="Profile" options={{headerShown: false}} component={Profile} />
         <Stack.Screen name="Settings" options={{headerShown: false}} component={Settings} />
         <Stack.Screen name="WhyPanama" options={{headerShown: false}} component={WhyPanama} />

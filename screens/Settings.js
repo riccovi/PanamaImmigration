@@ -3,24 +3,55 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, 
 import { TableView, Section, Cell } from 'react-native-tableview-simple';
 import Slider from '@react-native-community/slider';
 import BottomBar from '../components/BottomBar';
+import * as FileSystem from 'expo-file-system';
 
-function Settings({}){
+function Settings({ route }){
     const [modalVisible, setModalVisible] = useState(false);  // Credits modal
+    const [infoModalVisible, setInfoModalVisible] = useState(false); // Info modal
+    const [detailsModalVisible, setDetailsModalVisible] = useState(false); // Account details modal
     const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false); // Confirm deletion modal
     const [fontSize, setFontSize] = useState(16); // Default font size
+    const { userDetails } = route.params || {};
 
-    const handleDeleteAccount = () => {
-        //setConfirmDeleteVisible(false);
-        Alert.alert("Account Deleted", "Your account has been successfully deleted.");
-        // Add logic to delete the account from storage (e.g., remove from JSON file)
-      };
+    const handleDeleteAccount = async () => {
+        try{
+            setConfirmDeleteVisible(false);
+            const filePath = `${FileSystem.documentDirectory}users.json`;
+            // Check if Json file exists
+            const fileInfo = await FileSystem.getInfoAsync(filePath);
+            if (!fileInfo.exists) {
+                Alert.alert("Error", "No account data found.");
+                return;
+            }
+            // Read and parse the JSON file
+            const content = await FileSystem.readAsStringAsync(filePath);
+            let users = JSON.parse(content);
+            // Find current user (email is unique)
+            const updatedUsers = users.filter(u => u.email !== userDetails.email);
+            // Delete the acount
+            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedUsers));
+            Alert.alert("Account Deleted", "Your account has been successfully deleted.");
+            // Redirect to Login
+            navigation.navigate("LogIn");
+        } catch (error) {
+            Alert.alert("Error", "An error occurred while deleting your account.");
+        }
+    }
+
     return (
-      <SafeAreaView>
+      <SafeAreaView style={styles.safeArea}>
         <ScrollView>
             <TableView>
-                
-                {/* Credits Option*/}
-                <Section header="About">
+                {/* About Header*/}
+                <Section header="About" headerTextStyle={styles.headerText}>
+                    {/* Info */}
+                    <Cell cellContentView={
+                        <TouchableOpacity onPress={() => setInfoModalVisible(true)}>
+                            <View style={styles.menuItem}>
+                                <Text style={styles.menuItemText}>Info</Text>
+                            </View>
+                        </TouchableOpacity>} />
+                    {/* Credits */}
                     <Cell cellContentView={
                         <TouchableOpacity onPress={() => setModalVisible(true)}>
                             <View style={styles.menuItem}>
@@ -28,8 +59,8 @@ function Settings({}){
                             </View>
                         </TouchableOpacity>} />
                 </Section>
-                {/* Font Size Slider */}
-                <Section header="Display">
+                {/* Display Header */}
+                <Section header="Display" headerTextStyle={styles.headerText}>
                     <Cell cellContentView={
                         <View style={styles.menuItem}>
                             <Text style={styles.menuItemText}>Font Size</Text>
@@ -37,8 +68,16 @@ function Settings({}){
                             <Text style={styles.fontSizeLabel}>{fontSize}px</Text>
                         </View>} />
                 </Section>
-                {/* Delete Account */}
-                <Section header="Account">
+                {/* Account Header */}
+                <Section header="Account" headerTextStyle={styles.headerText}>
+                    {/* Details */}
+                    <Cell cellContentView={
+                        <TouchableOpacity onPress={() => setDetailsModalVisible(true)}>
+                            <View style={styles.menuItem}>
+                                <Text style={styles.menuItemText}>Details</Text>
+                            </View>
+                        </TouchableOpacity>} />
+                    {/* Delete */}
                     <Cell cellContentView={
                         <TouchableOpacity onPress={() => setConfirmDeleteVisible(true)}>
                             <View style={styles.menuItem}>
@@ -50,6 +89,17 @@ function Settings({}){
             </TableView>
         </ScrollView>
 
+        {/* Info Modal */}   
+        <Modal visible={infoModalVisible} animationType="slide" transparent={true} onRequestClose={() => setInfoModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Info</Text>
+                    <Text style={styles.modalText}>We strive to provide an easy way for all things Panama Immigration. Our team has personally lived in Panama and is a proud advocate of the country. We are not official ambassadors or receive any commission from Panama.{"\n"}{"\n"}If you have any concerns or questions, please contact us: help@panamaimmigration.com</Text>
+                    <Button title="Close" onPress={() => setInfoModalVisible(false)} />
+                </View>
+            </View>
+        </Modal>  
+
         {/* Credits Modal */}   
         <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={() => setModalVisible(false)}>
             <View style={styles.modalOverlay}>
@@ -59,7 +109,18 @@ function Settings({}){
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>
-        </Modal>     
+        </Modal>
+
+        {/* Details Modal */}   
+        <Modal visible={detailsModalVisible} animationType="slide" transparent={true} onRequestClose={() => setDetailsModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Details</Text>
+                    <Text style={styles.modalText}>Email: {userDetails?.email}{"\n"}Username: {userDetails?.username}{"\n"}Password: {userDetails?.password}{"\n"}Newsletter: {userDetails?.newsletter ? "Subscribed" : "Not Subscribed"} </Text>
+                    <Button title="Close" onPress={() => setDetailsModalVisible(false)} />
+                </View>
+            </View>
+        </Modal>       
 
         {/* Confirm Delete Modal */}
         <Modal visible={confirmDeleteVisible} animationType="slide" transparent={true} onRequestClose={() => setConfirmDeleteVisible(false)}>
@@ -84,15 +145,25 @@ export default Settings;
 
 const styles = StyleSheet.create({
     // Settings Menu
+    safeArea: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff'
+    },
+    headerText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        paddingVertical: 12
+    },  
     menuItem: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingVertical: 10,
-        paddingHorizontal: 15,
+        paddingVertical: 15,
+        paddingHorizontal: 5,
     },
     menuItemText: {
-        fontSize: 16,
+        fontSize: 20,
     },
     // Slider
     slider: {
@@ -100,7 +171,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     fontSizeLabel: {
-        fontSize: 16,
+        fontSize: 20,
         marginLeft: 10,
     },
     // Modal
