@@ -31,8 +31,9 @@ function HomeScreen({ route, navigation }){
             <HomeScreenCell title="Why Panama" imgUri={require('../assets/panama-flag.jpg')} action={() => navigation.navigate("WhyPanama")} />
             <HomeScreenCell title="Eligibility Quiz" imgUri={require('../assets/quiz-pic.jpg')} action={() => navigation.navigate("EligibilityQuiz")} />
             <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
-            <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
-          </Section>
+            <HomeScreenCell title="Profile" imgUri={require('../assets/profile-pic.jpg')} action={() => navigation.navigate("Profile")} />
+            <HomeScreenCell title="Settings" imgUri={require('../assets/settings-pic.jpg')} action={() => navigation.navigate("Settings")} /> 
+         </Section>
         </TableView>
       </ScrollView>
       <BottomBar userDetails={userDetails}/>

@@ -105,7 +105,11 @@ function Settings({ route }){
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>Credits</Text>
-                    <Text style={styles.modalText}>xxx{"\n"}yyy</Text>
+                    <Text style={styles.modalHeader}>Packages Used</Text>
+                    <Text style={styles.modalText}>Navigation, Async Storage, File System, Tablieview, Bottom Tab, Icons, Slider, Picker</Text>
+                    <Text style={styles.modalHeader}>Assets From Unsplash</Text>
+                    <Text style={styles.modalText}>Luis Gonzalez, Nguyen Dang Hoang Nhu, NordWood Themes, Laura Ockel, Ben Sweet</Text>
+                    <Text style={styles.modalText}>10 March 2025{"\n"}University Of London</Text>
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>
@@ -192,6 +196,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
+    },
+    modalHeader: {
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     modalText: {
         fontSize: 16,
