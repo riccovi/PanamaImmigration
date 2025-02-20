@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, ScrollView, Button, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomBar from '../components/BottomBar';
 import quizData from '../data/quizQuestions.json';
+
+const quiz_progress_key = 'quiz_progress';
 
 const EligibilityQuiz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -11,14 +14,69 @@ const EligibilityQuiz = () => {
   const [showResult, setShowResult] = useState(false);
   const currentQuestion = quizData[currentQuestionIndex];
 
+  // Load progress when component is used
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        const savedProgress = await AsyncStorage.getItem(quiz_progress_key);
+        if (savedProgress) {
+          const { savedIndex, savedAnswers } = JSON.parse(savedProgress);
+          setCurrentQuestionIndex(savedIndex);
+          setAnswers(savedAnswers);
+        } 
+      } catch (error) {
+          console.error('Failed to load quiz progress:', error);
+        }
+      }
+    loadProgress();
+  }, []);
+
+  // Save progress to AsyncStorage
+  const saveProgress = async (index, userAnswers) => {
+    try {
+      const progressData = JSON.stringify({ savedIndex: index, savedAnswers: userAnswers });
+      await AsyncStorage.setItem(quiz_progress_key, progressData);
+    } catch (error) {
+      console.error('Failed to save quiz progress:', error);
+    }
+  };
+
   // Save answer for current question
   const handleAnswer = (answer) => {
-    setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
+    const updatedAnswers = { ...answers, [currentQuestion.id]: answer };
+    setAnswers(updatedAnswers);
+    saveProgress(currentQuestionIndex, updatedAnswers)
+    //setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
   };
 
   // Render input based on question type
   const renderInputForQuestion = (question) => {
     switch (question.type) {
+      // compound type
+      case 'compound':
+      return (
+        <View style={styles.compoundContainer}>
+          {/* Dropdown for prefix */}
+          <View style={styles.prefixContainer}>
+            <Picker selectedValue={answers[question.id]?.prefix || ''} style={styles.prefixPicker} onValueChange={(itemValue) => setAnswers(prev => ({...prev, [question.id]: {...prev[question.id], prefix: itemValue}}))}>
+              <Picker.Item label="Mr" value="Mr" />
+              <Picker.Item label="Miss" value="Miss" />
+              <Picker.Item label="Mrs" value="Mrs" />
+              <Picker.Item label="Ms" value="Ms" />
+              <Picker.Item label="Sir" value="Sir" />
+              <Picker.Item label="Dr" value="Dr" />
+            </Picker>
+          </View>
+          {/* TextInput for first name */}
+          <View style={styles.nameInputContainer}>
+            <TextInput style={styles.compoundInput} placeholder="First Name" value={answers[question.id]?.firstName || ''} onChangeText={(text) => setAnswers(prev => ({...prev,[question.id]: { ...prev[question.id],firstName: text}}))}/>
+          </View>
+          {/* TextInput for surname */}
+          <View style={styles.nameInputContainer}>
+            <TextInput style={styles.compoundInput} placeholder="Surname" value={answers[question.id]?.surname || ''} onChangeText={(text) => setAnswers(prev => ({...prev,[question.id]: { ...prev[question.id],surname: text}}))}/>
+          </View>
+        </View>
+      );
       // text type
       case 'text':
         return (
@@ -54,8 +112,8 @@ const EligibilityQuiz = () => {
       // date type
       case 'date':
         return (
-          <TextInput style={styles.input} placeholder="YYYY-MM-DD" value={answers[question.id] || ''} onChangeText={handleAnswer}/>
-        );
+          <TextInput style={styles.input} placeholder="YYYY-MM-DD" keyboardType="numeric" value={answers[question.id] || ''} onChangeText={handleAnswer}/>
+        ); 
       default:
         return null;
     }
@@ -106,6 +164,26 @@ const EligibilityQuiz = () => {
     setShowResult(true);
   };
 
+
+  const goToPrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => {
+        const newIndex = prev - 1;
+        saveProgress(newIndex, answers);
+        return newIndex;
+      });
+    }
+  };
+  const goToNext = () => {
+    if (currentQuestionIndex < quizData.length - 1) {
+      setCurrentQuestionIndex((prev) => {
+        const newIndex = prev + 1;
+        saveProgress(newIndex, answers);
+        return newIndex;
+      });
+    }
+  };
+  {/*
   // Navigation
   const goToPrevious = () => {
     if (currentQuestionIndex > 0) { // If not at first question
@@ -117,6 +195,7 @@ const EligibilityQuiz = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
+  */}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,7 +204,7 @@ const EligibilityQuiz = () => {
         <View style={styles.resultContainer}>
           <Text style={styles.resultText}>Your score: {totalScore} / 35</Text>
           <Text style={styles.resultEligibility}>{totalScore > 10 ? "Eligible" : "Not Eligible"}</Text> {/* Eligible if score above 10 */}
-          <Button title="Restart Quiz" onPress={() => {setAnswers({}); setCurrentQuestionIndex(0); setShowResult(false);}} /> {/* Restart Button */}
+          <Button title="Restart Quiz" onPress={() => {setAnswers({}); setCurrentQuestionIndex(0); setShowResult(false); saveProgress(0, {});}} /> {/* Restart Button */}
         </View>
       ) : (
         <>
@@ -200,6 +279,36 @@ const styles = StyleSheet.create({
   picker: { 
     width: '100%', 
     height: 50 
+  },
+
+  compoundContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+  },
+  compoundInput: {
+    height: 50,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  prefixContainer: {
+    flex: 1,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  prefixPicker: {
+    height: 50,
+    width: '100%',
+  },
+  nameInputContainer: {
+    flex: 2,
+    marginHorizontal: 5,
   },
 
   yesNoContainer: { 
