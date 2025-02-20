@@ -170,9 +170,17 @@ const EligibilityQuiz = () => {
     }
   };
 
-
+  // Navigation
   const goToPrevious = () => {
-    if (currentQuestionIndex > 0) {
+    if (currentQuestion.id === 4) { // Age validation
+      const age = parseInt(answers[4],10);
+      if (isNaN(age) || age < 18 || age > 99){
+        alert('Please enter a valid age')
+        return;
+      }
+    }
+
+    if (currentQuestionIndex > 0) { // If not at first question
       setCurrentQuestionIndex((prev) => {
         const newIndex = prev - 1;
         saveProgress(newIndex, answers);
@@ -181,8 +189,16 @@ const EligibilityQuiz = () => {
     }
   };
   const goToNext = () => {
+    if (currentQuestion.id === 4) { // Age validation
+      const age = parseInt(answers[4],10);
+      if (isNaN(age) || age < 18 || age > 99){
+        alert('Please enter a valid age')
+        return;
+      }
+    }
+
     if (currentQuestionIndex < quizData.length - 1) {
-      setCurrentQuestionIndex((prev) => {
+      setCurrentQuestionIndex((prev) => { // If not at last question
         const newIndex = prev + 1;
         saveProgress(newIndex, answers);
         return newIndex;
