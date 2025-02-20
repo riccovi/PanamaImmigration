@@ -1,8 +1,8 @@
 [
     {
       "id": 1,
-      "question": "Name (prefix, first name, last name)",
-      "type": "text",
+      "question": "Full Name",
+      "type": "compound",
       "fields": ["prefix", "firstName", "lastName"],
       "points": 0
     },

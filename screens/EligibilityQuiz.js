@@ -143,11 +143,16 @@ const EligibilityQuiz = () => {
             )}
           </View>
           <ScrollView horizontal style={styles.scrollbar}> {/* Horizontal Scrollbar */}
-            {quizData.map((question, index) => (
-              <TouchableOpacity key={question.id} style={[styles.scrollbarItem, currentQuestionIndex === index && styles.activeScrollbarItem]} onPress={() => setCurrentQuestionIndex(index)}>
+          <View style={{ flexDirection: 'row' }}>
+            {quizData.map((question, index) => {
+              const answered = answers[question.id] !== undefined;
+              const accessible = (index <= currentQuestionIndex) || answered; // Accessible if current question, before current question, or answered
+              return (
+              <TouchableOpacity key={question.id} style={[styles.scrollbarItem, answered && styles.answeredScrollbarItem, index === currentQuestionIndex && styles.activeScrollbarItem, !accessible && styles.disabledScrollbarItem]} onPress={() => { if (accessible) setCurrentQuestionIndex(index); }} disabled={!accessible}>
                 <Text style={styles.scrollbarText}>{index + 1}</Text>
               </TouchableOpacity>
-            ))}
+            )})}
+          </View>
           </ScrollView>
         </>
       )}
@@ -230,9 +235,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center' 
   },
-  activeScrollbarItem: { 
-    backgroundColor: '#1EB1FC' 
+  answeredScrollbarItem: {
+    backgroundColor: 'green', 
   },
+  activeScrollbarItem: { 
+    borderWidth: 2,
+    borderColor: 'blue'
+  },
+  disabledScrollbarItem: {
+    opacity: 0.5
+  }, 
   scrollbarText: { 
     fontSize: 16, 
     color: '#fff' 
