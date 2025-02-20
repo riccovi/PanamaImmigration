@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, SafeAreaView, TextInput, Switch, TouchableOpacity, Alert, Modal } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import { Ionicons } from '@expo/vector-icons';
 
 function LogIn({navigation}){
   const [email, setEmail] = useState('');
   const [modalVisible, setModalVisible] = useState(null) // 'signup' or 'login' or 'null'
   const [password, setPassword] = useState("");
   const [newsletter, setNewsletter] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const filePath = FileSystem.documentDirectory + 'users.json';
 
   // Function to validate email
@@ -112,7 +114,7 @@ function LogIn({navigation}){
           <SafeAreaView style={styles.safeView}>
 
               <View style={styles.loginTop}>
-                <Text style={styles.loginTextTop}>Panama Immigration Made Simple! ✈️</Text>
+                <Text style={styles.loginTextTop}>✈️ Panama Immigration Made Simple!</Text>
               </View>
 
               <View style={styles.loginMiddle}>
@@ -135,8 +137,14 @@ function LogIn({navigation}){
                     <Text style={styles.modalTitle}>Sign Up</Text>
                     <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail} keyboardType='email-address' autoCapitalize='none' />
                     <Text>Passwords must contain at least: 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number</Text>
-                    <TextInput style={styles.input} placeholder="Password" secureTextEntry onChangeText={setPassword} />
                     
+                    <View style={styles.passwordContainer}>
+                      <TextInput style={styles.input} placeholder="Password" secureTextEntry={!showPassword} onChangeText={setPassword} />
+                      <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="black"/>
+                      </TouchableOpacity>
+                    </View>
+
                     <View style={styles.switchContainer}>
                         <Switch value={newsletter} onValueChange={setNewsletter} ios_backgroundColor="#3e3e3e" size="large" />
                         <Text>Sign up to hear all the latest news!</Text>
@@ -160,7 +168,13 @@ function LogIn({navigation}){
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalView}>
                     <Text style={styles.modalTitle}>Log In</Text>
                     <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail} keyboardType='email-address' autoCapitalize='none' />
-                    <TextInput style={styles.input} placeholder="Password" secureTextEntry onChangeText={setPassword} />
+                    
+                    <View style={styles.passwordContainer}>
+                      <TextInput style={styles.input} placeholder="Password" secureTextEntry={!showPassword} onChangeText={setPassword} />
+                      <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="black"/>
+                      </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity style={styles.modalButton} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Login</Text>
