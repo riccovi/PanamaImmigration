@@ -158,10 +158,16 @@ const EligibilityQuiz = () => {
   };
 
   // Finish Quiz
-  const finishQuiz = () => {
+  const finishQuiz = async () => {
     const score = calculateTotalScore();
     setTotalScore(score);
     setShowResult(true);
+
+    try{
+      await AsyncStorage.setItem('quiz_answers', JSON.stringify(answers));
+    } catch (error){
+      console.error('Failed to save final quiz answers:', error);
+    }
   };
 
 
