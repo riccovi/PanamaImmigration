@@ -1,0 +1,139 @@
+[
+    {
+      "id": 1,
+      "question": "Name (prefix, first name, last name)",
+      "type": "text",
+      "fields": ["prefix", "firstName", "lastName"],
+      "points": 0
+    },
+    {
+      "id": 2,
+      "question": "Country of Citizenship",
+      "type": "dropdown",
+      "options": ["Andorra", "Argentina", "Australia", "Austria", "Belgium", "Brazil", "Canada", "Chile", "Costa Rica", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong", "Hungary", "Ireland", "Israel", "Japan", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Mexico", "Monaco", "Montenegro", "Netherlands", "New Zealand", "Norway", "Paraguay", "Poland", "Portugal", "San Marino", "Serbia", "Singapore", "Slovakia", "Spain", "South Africa", "South Korea", "Sweden", "Switzerland", "Taiwan", "United States of America", "Uruguay", "United Kingdom"],
+      "points": 3
+    },
+    {
+      "id": 3,
+      "question": "Educational Qualifications",
+      "type": "dropdown",
+      "options": ["PHD/Doctorate", "Masters", "Bachelor (3+ Years)", "Associate/Diploma (2 Years)", "Diploma (1 Year)", "High School"],
+      "pointsMapping": {
+        "PHD/Doctorate": 3,
+        "Masters": 3,
+        "Bachelor (3+ Years)": 2,
+        "Associate/Diploma (2 Years)": 1,
+        "Diploma (1 Year)": 1,
+        "High School": 0
+      }
+    },
+    {
+      "id": 4,
+      "question": "Age",
+      "type": "number",
+      "min": 18,
+      "max": 99
+    },
+    {
+      "id": 5,
+      "question": "Date of Birth",
+      "type": "date"
+    },
+    {
+      "id": 6,
+      "question": "Marital Status",
+      "type": "dropdown",
+      "options": ["Single", "Married", "Permanent Live-in with Partner", "Divorced", "Widowed"],
+      "pointsMapping": {
+        "Married": 1,
+        "default": 0
+      }
+    },
+    {
+      "id": 7,
+      "question": "Do you have any dependents under 12 traveling with you?",
+      "type": "yesno",
+      "pointsMapping": {
+        "no": 1,
+        "yes": 0
+      }
+    },
+    {
+      "id": 8,
+      "question": "Do you have any dependents over 12 traveling with you?",
+      "type": "yesno",
+      "pointsMapping": {
+        "no": 1,
+        "yes": 0
+      }
+    },
+    {
+      "id": 9,
+      "question": "Do you have a Contract of Employment with a Panamanian Company?",
+      "type": "yesno",
+      "pointsMapping": {
+        "yes": 5,
+        "no": 0
+      }
+    },
+    {
+      "id": 10,
+      "question": "Do you own Real Estate in Panama valued at $300,000 or more?",
+      "type": "yesno",
+      "pointsMapping": {
+        "yes": 5,
+        "no": 0
+      }
+    },
+    {
+      "id": 11,
+      "question": "Do you have $300,000 or more in a Panamanian bank account, or do you have such funds available?",
+      "type": "yesno",
+      "pointsMapping": {
+        "yes": 3,
+        "no": 0
+      }
+    },
+    {
+      "id": 12,
+      "question": "How good are your English language skills? (0-10)",
+      "type": "number",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "id": 13,
+      "question": "How good are your Spanish language skills? (0-10)",
+      "type": "number",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "id": 14,
+      "question": "Do you have any health issues?",
+      "type": "yesno",
+      "pointsMapping": {
+        "no": 2,
+        "yes": 0
+      }
+    },
+    {
+      "id": 15,
+      "question": "Do you have a criminal record?",
+      "type": "yesno",
+      "pointsMapping": {
+        "no": 3,
+        "yes": 0
+      }
+    },
+    {
+      "id": 16,
+      "question": "Have you ever overstayed your Panama Visa or Illegally stayed in the Country?",
+      "type": "yesno",
+      "pointsMapping": {
+        "no": 2,
+        "yes": 0
+      }
+    }
+]
+  
