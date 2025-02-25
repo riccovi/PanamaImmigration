@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image } from 'react-native';
 import { TableView, Section, Cell } from 'react-native-tableview-simple';
 import Slider from '@react-native-community/slider';
 import BottomBar from '../components/BottomBar';
@@ -106,10 +106,19 @@ function Settings({ route }){
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>Credits</Text>
                     <Text style={styles.modalHeader}>Packages Used</Text>
-                    <Text style={styles.modalText}>Navigation, Async Storage, File System, Tablieview, Bottom Tab, Icons, Slider, Picker</Text>
+                    <Text style={styles.modalText}>Navigation, Async Storage, File System, Tableview, Bottom Tab, Icons, Slider, Picker, Location, Luxon, Camera, Image Picker</Text>
                     <Text style={styles.modalHeader}>Assets From Unsplash</Text>
-                    <Text style={styles.modalText}>Luis Gonzalez, Nguyen Dang Hoang Nhu, NordWood Themes, Laura Ockel, Ben Sweet</Text>
-                    <Text style={styles.modalText}>10 March 2025{"\n"}University Of London</Text>
+                    <Text style={styles.modalText}>
+                        <Text onPress={() => Linking.openURL('https://unsplash.com/@luchox23?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>Luis Gonzalez</Text>,{' '}
+                        <Text onPress={() => Linking.openURL('https://unsplash.com/@nguyendhn?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>Nguyen Dang Hoang Nhu</Text>,{' '}
+                        <Text onPress={() => Linking.openURL('https://unsplash.com/@nordwood?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>NordWood Themes</Text>,{' '}
+                        <Text onPress={() => Linking.openURL('https://unsplash.com/@viazavier?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>Laura Ockel</Text>,{' '}
+                        <Text onPress={() => Linking.openURL('https://unsplash.com/@benjaminsweet?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>Ben Sweet</Text>
+                    </Text>
+                    <View style={styles.creditsUol}>
+                        <Image style={styles.logo} source={require('../assets/uol-logo.png')}/>
+                        <Text style={styles.modalText}>10 March 2025{"\n"}University Of London</Text>
+                    </View>
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>
@@ -193,7 +202,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "bold",
         marginBottom: 10,
     },
@@ -204,6 +213,19 @@ const styles = StyleSheet.create({
     modalText: {
         fontSize: 16,
         marginBottom: 20,
+    },
+    creditsUol: {
+        flexDirection: 'row',
+    },
+    logo: {
+        width: 40,  
+        height: 40, 
+        marginRight: 15,
+        resizeMode: 'contain'
+    },
+    link: {
+        color: 'blue',
+        textDecorationLine: 'underline'
     },
     buttonRow: {
         flexDirection: "row",

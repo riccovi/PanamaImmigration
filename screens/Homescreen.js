@@ -23,8 +23,8 @@ function HomeScreen({ route, navigation }){
   const { userDetails } = route.params || {};
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         <TableView>
           <Section header="" hideSeparator="true" separatorTintColor="#ccc">
             <Text style={styles.welcome}>Welcome, {userDetails?.username || "Guest"}!</Text>
@@ -43,6 +43,54 @@ function HomeScreen({ route, navigation }){
 
 export default HomeScreen;
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  welcome: {
+    paddingVertical: 25,
+    fontSize: 30,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.1)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2
+  },
+  cellView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: width / 3.5,
+    width: width / 1.1,
+    marginVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: '#4a90e2', 
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6 
+  },
+  cellImage: {
+    height: '90%', 
+    width: '35%',
+    borderRadius: 15, 
+    marginRight: 15
+  },
+  cellText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+    flexShrink: 1 
+  },
+  bottomCell: {
+    marginBottom: 60
+  }
+});
+
+/*
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -81,3 +129,4 @@ const styles = StyleSheet.create({
       fontWeight: 'bold'
     }
   });
+  */
