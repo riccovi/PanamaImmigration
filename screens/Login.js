@@ -63,6 +63,23 @@ function LogIn({navigation}){
         return;
     }
 
+    // Check if email already exists
+    try{ 
+      const fileInfo = await FileSystem.getInfoAsync(filePath);
+      let users = [];
+      if (fileInfo.exists) {
+          const fileContent = await FileSystem.readAsStringAsync(filePath);
+          users = JSON.parse(fileContent);
+      }
+      const existingUser = users.find(u => u.email === email);
+      if (existingUser) {
+          Alert.alert("Account Exists", "An account with this email already exists. Please log in or use a different email.");
+          return;
+      }
+    } catch (error) {
+      console.log("Error checking for existing email:", error);
+    }
+
     const username = email.split('@')[0]; // Username is set as part of email before @ sign
     const userData = { email, password, username, newsletter }
     // If all valid, save to json file
@@ -105,6 +122,35 @@ function LogIn({navigation}){
       Alert.alert("Error", "An error occured while trying to log in")
     }
   }
+  
+  // Handle Forgot Password Feature
+  const handleForgotPassword = async () => {
+    if (!email) {
+      Alert.alert("Missing Email", "Please enter your email address.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+    try {
+      const info = await FileSystem.getInfoAsync(filePath);
+      if (!info.exists) {
+        Alert.alert("Email Not Found", "No accounts exist in the system.");
+        return;
+      }
+      const content = await FileSystem.readAsStringAsync(filePath);
+      const users = JSON.parse(content);
+      const user = users.find(u => u.email === email);
+      if (user) {
+        Alert.alert("Success", `Password reset sent to ${email}.`);
+      } else {
+        Alert.alert("Email Not Found", "The email address does not exist in our system.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred while processing your request.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -133,21 +179,22 @@ function LogIn({navigation}){
               <Modal visible={modalVisible === "signup"} animationType="slide" transparent={true}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.modalContainer}>
-                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalView}>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalView}>
                     <Text style={styles.modalTitle}>Sign Up</Text>
+                    
                     <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail} keyboardType='email-address' autoCapitalize='none' />
                     <Text>Passwords must contain at least: 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number</Text>
                     
-                    <View style={styles.passwordContainer}>
-                      <TextInput style={styles.input} placeholder="Password" secureTextEntry={!showPassword} onChangeText={setPassword} />
-                      <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <View>
+                      <TextInput style={styles.input} placeholder="Password" secureTextEntry={!showPassword} onChangeText={setPassword}/>
+                      <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
                         <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="black"/>
                       </TouchableOpacity>
                     </View>
 
                     <View style={styles.switchContainer}>
                         <Switch value={newsletter} onValueChange={setNewsletter} ios_backgroundColor="#3e3e3e" size="large" />
-                        <Text>Sign up to hear all the latest news!</Text>
+                        <Text style={styles.switchText}>Sign up to hear all the latest news!</Text>
                     </View>
 
                     <TouchableOpacity style={styles.modalButton} onPress={handleSignUp}>
@@ -156,7 +203,7 @@ function LogIn({navigation}){
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(null)}>
                         <Text style={styles.closeText}>Cancel</Text>
                     </TouchableOpacity>
-                    </KeyboardAvoidingView>
+                  </KeyboardAvoidingView>
                 </View>
                 </TouchableWithoutFeedback>
               </Modal>
@@ -169,9 +216,9 @@ function LogIn({navigation}){
                     <Text style={styles.modalTitle}>Log In</Text>
                     <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail} keyboardType='email-address' autoCapitalize='none' />
                     
-                    <View style={styles.passwordContainer}>
+                    <View>
                       <TextInput style={styles.input} placeholder="Password" secureTextEntry={!showPassword} onChangeText={setPassword} />
-                      <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                      <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
                         <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="black"/>
                       </TouchableOpacity>
                     </View>
@@ -179,6 +226,9 @@ function LogIn({navigation}){
                     <TouchableOpacity style={styles.modalButton} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton} onPress={handleForgotPassword}>
+                          <Text style={styles.forgotText}>Forgot Password?</Text>
+                        </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(null)}>
                         <Text style={styles.closeText}>Cancel</Text>
                     </TouchableOpacity>
@@ -215,10 +265,9 @@ const styles = StyleSheet.create({
     },
   
     loginTop: {
-      flex: 1,
+      //flex: 1,
       justifyContent: 'flex-end',
-      paddingLeft:"10%",
-      paddingRight:"10%"
+      padding: '10%'
     },
     loginTextTop: {
       fontSize: 33,
@@ -226,12 +275,12 @@ const styles = StyleSheet.create({
     },
   
     loginMiddle: {
-      paddingTop: 10,
+      paddingBottom: '10%',
       paddingLeft:"9%",
       paddingRight:"9%"
     },
     loginTextMiddle: {
-      fontSize: 17
+      fontSize: 20
     },
 
     loginButtonSignup: {
@@ -248,7 +297,7 @@ const styles = StyleSheet.create({
       textAlign:"center",
       color:"white",
       fontWeight:"bold",
-      fontSize:28
+      fontSize:25
     },
 
     modalContainer: {
@@ -273,11 +322,21 @@ const styles = StyleSheet.create({
         marginVertical: 10, 
         borderRadius: 5
     },
+    eyeIcon: {
+      position: 'absolute',
+      right: 10,
+      top: '50%',
+      transform: [{ translateY: -12 }],
+    },
     switchContainer: {
         flexDirection: "row", 
         alignItems: "center", 
-        marginBottom: 15
+        marginBottom: 5,
+        paddingHorizontal: 30
     },
+    switchText: {
+      fontSize: 15
+    },  
     modalButton: {
         backgroundColor: "black", 
         padding: 10, 
@@ -290,10 +349,13 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     closeButton: {
-        marginTop: 10, 
+        marginTop: 20, 
         alignItems: "center",
     },
     closeText: {
         color: 'red'
+    },
+    forgotText: {
+        color: 'darkblue'
     }
   });
