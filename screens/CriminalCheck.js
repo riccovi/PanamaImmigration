@@ -1,3 +1,85 @@
+import React, { useState } from 'react';
+import { View, Button, Image, StyleSheet } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import BottomBar from '../components/BottomBar';
+
+function CriminalCheck() {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const pickImage = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images });
+
+    if (!pickerResult.canceled) {
+      setSelectedImage({ localUri: pickerResult.assets[0].uri });
+    }
+  };
+
+  const takePhoto = async () => {
+    let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert('Permission to access camera is required!');
+      return;
+    }
+
+    let cameraResult = await ImagePicker.launchCameraAsync();
+
+    if (!cameraResult.canceled) {
+      setSelectedImage({ localUri: cameraResult.assets[0].uri });
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <Button title="Pick an image from gallery" onPress={pickImage} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Take a photo" onPress={takePhoto} />
+      </View>
+      {selectedImage && (
+        <>
+          <Image source={{ uri: selectedImage.localUri }} style={styles.image} />
+        </>
+      )}
+
+      <BottomBar />
+    </View>
+  );
+}
+
+export default CriminalCheck;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'grey',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  buttonContainer: {
+    marginVertical: 10,
+    width: '80%',
+  },
+  image: {
+    width: 300,
+    height: 300,
+    borderWidth: 2,
+    borderColor: '#333',
+    borderRadius: 10,
+    marginVertical: 20,
+  }
+});
+
+/*
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera } from 'expo-camera';
@@ -181,3 +263,4 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+*/
