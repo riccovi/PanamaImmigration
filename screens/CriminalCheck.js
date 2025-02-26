@@ -75,6 +75,7 @@ function CriminalCheck() {
       {/* If image doesn't exist, display buttons in column*/}
       {!selectedImage && (
         <>
+          <Text style={styles.infoText}>To do a criminal check, we will need a photo of your face to scan through our database. Either select an image from the gallery or take a photo.</Text>
           <TouchableOpacity style={styles.button} onPress={pickImage}>
             <Text style={styles.buttonText}>Pick an image from gallery</Text>
           </TouchableOpacity>
@@ -163,6 +164,6 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 20,
     textAlign: 'center',
-    marginTop: 10,
+    marginVertical: 10,
   }, 
 });

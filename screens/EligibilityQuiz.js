@@ -13,6 +13,7 @@ const EligibilityQuiz = () => {
   const [totalScore, setTotalScore] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const currentQuestion = quizData[currentQuestionIndex];
+  const allCountries = ["Afghanistan", "Albania", "Algeria"];
 
   // Load progress when component is used
   useEffect(() => {
@@ -94,6 +95,7 @@ const EligibilityQuiz = () => {
             <Picker selectedValue={answers[question.id] || ''} style={styles.picker} onValueChange={(itemValue) => handleAnswer(itemValue)}>
               <Picker.Item label="Select an option" value="" />
               {question.options.map((option, index) => (<Picker.Item key={index} label={option} value={option} />))}
+            
             </Picker>
           </View>
         );
@@ -323,6 +325,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginRight: 5,
+    minWidth: 60
   },
   prefixPicker: {
     height: 50,
