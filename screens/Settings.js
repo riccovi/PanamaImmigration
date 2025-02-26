@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image } from 'react-native';
 import { TableView, Section, Cell } from 'react-native-tableview-simple';
 import Slider from '@react-native-community/slider';
-import BottomBar from '../components/BottomBar';
 import * as FileSystem from 'expo-file-system';
+import * as Haptics from 'expo-haptics'
+import BottomBar from '../components/BottomBar';
+
+
 
 function Settings({ route }){
     const [modalVisible, setModalVisible] = useState(false);  // Credits modal
@@ -79,7 +82,7 @@ function Settings({ route }){
                         </TouchableOpacity>} />
                     {/* Delete */}
                     <Cell cellContentView={
-                        <TouchableOpacity onPress={() => setConfirmDeleteVisible(true)}>
+                        <TouchableOpacity onPress={async () => {await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning); setConfirmDeleteVisible(true);}}>
                             <View style={styles.menuItem}>
                                 <Text style={[styles.menuItemText, { color: 'red' }]}>Delete Account</Text>
                             </View>

@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity} from 'reac
 import { useState, useEffect } from 'react';
 import { DateTime } from "luxon";
 import { AntDesign } from '@expo/vector-icons';
+import { Accelerometer } from 'expo-sensors';
 import * as Location from 'expo-location';
 import prosAndConsData from '../data/prosAndCons.json'; 
 import BottomBar from '../components/BottomBar';
@@ -11,6 +12,7 @@ function WhyPanama({}){
   const [userWeatherData, setUserWeatherData] = useState(null);
   const [panamaWeatherData, setPanamaWeatherData] = useState(null);
   const [prosConsIndex, setProsConsIndex] = useState(0);
+  const [lastShakeTime, setLastShakeTime] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -87,6 +89,35 @@ function WhyPanama({}){
     if (prosConsIndex > 0) setProsConsIndex(prosConsIndex - 1);
   };
 
+  // Accelerometer subscription for shake detection
+  useEffect(() => {
+    const shakeThreshold = 1.7; // Adjust this threshold based on testing
+    const subscription = Accelerometer.addListener(accData => {
+      const { x, y, z } = accData;
+      const totalAcc = Math.sqrt(x * x + y * y + z * z);
+      if (totalAcc > shakeThreshold) {
+        const now = Date.now();
+        // Debounce: Only trigger if at least 1 second has passed since last shake
+        if (now - lastShakeTime > 1000) {
+          setLastShakeTime(now);
+          handleNext();
+        }
+      }
+    });
+    return () => subscription && subscription.remove();
+  }, [lastShakeTime, prosConsIndex]);
+
+  // Bold pro/con header content
+  const renderProConText = (text) => {
+    // Split the text at the first colon to separate the heading
+    const [heading, ...rest] = text.split(':');
+    return (
+      <Text>
+        <Text style={{ fontWeight: 'bold' }}>{heading}:</Text>
+        <Text>{rest.join(':')}</Text>
+      </Text>
+    );
+  };
   
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -150,12 +181,12 @@ function WhyPanama({}){
           {/* Pro */}
           <View style={[styles.prosCard, {backgroundColor: 'lightgreen'}]}>
             <Text style={styles.prosCardTitle}>Pro</Text>
-            <Text style={styles.prosCardContent}>{pros[prosConsIndex]}</Text>
+            <Text style={styles.prosCardContent}>{renderProConText(pros[prosConsIndex])}</Text>
           </View>
           {/* Con */}
           <View style={[styles.prosCard, {backgroundColor: 'pink'}]}>
             <Text style={styles.prosCardTitle}>Con</Text>
-            <Text style={styles.prosCardContent}>{cons[prosConsIndex]}</Text>
+            <Text style={styles.prosCardContent}>{renderProConText(cons[prosConsIndex])}</Text>
           </View>
           {/* Navigation Arrows */}
           <View style={styles.prosNavContainer}>
@@ -166,6 +197,9 @@ function WhyPanama({}){
             <TouchableOpacity onPress={handleNext} disabled={prosConsIndex === pros.length - 1}>
               <AntDesign name="rightcircleo" size={32} color={prosConsIndex === pros.length - 1 ? "gray" : "black"} />
             </TouchableOpacity>
+          </View>
+          <View style={styles.shakeHintContainer}>
+            <Text style={styles.shakeHintText}>Shake for next!</Text>
           </View>
         </View>
 
@@ -244,6 +278,7 @@ const styles = StyleSheet.create({
     padding: 20, 
     alignItems: "center",
     paddingBottom: 80, 
+    position: 'relative'
   },
   prosHeader: { 
     fontSize: 24, 
@@ -274,5 +309,21 @@ const styles = StyleSheet.create({
   prosIndexText: {
     fontSize: 18, 
     marginHorizontal: 20 
+  },
+
+  shakeHintContainer: {
+    position: 'absolute',
+    top: '20%',
+    right: '85%',
+    transform: [{ rotate: '-45deg' }],
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 3,
+  },
+  shakeHintText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   }
 });
