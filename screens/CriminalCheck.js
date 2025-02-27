@@ -11,7 +11,7 @@ function CriminalCheck() {
   useEffect(() => {
     const loadImage = async () => {
       try {
-        const storedImage = await AsyncStorage.getItem('selectedImage');
+        const storedImage = await AsyncStorage.getItem('criminal_check_photo');
         if (storedImage) {
           setSelectedImage(JSON.parse(storedImage));
         }
@@ -25,7 +25,7 @@ function CriminalCheck() {
   // Save selected image in AsyncStorage
   const saveImage = async (image) => {
     try {
-      await AsyncStorage.setItem('selectedImage', JSON.stringify(image));
+      await AsyncStorage.setItem('criminal_check_photo', JSON.stringify(image));
     } catch (error) {
       console.error('Failed to save image to storage', error);
     }
@@ -67,7 +67,7 @@ function CriminalCheck() {
   // Delete photo
   const deletePhoto = async () => {
     setSelectedImage(null);
-    await AsyncStorage.removeItem('selectedImage');
+    await AsyncStorage.removeItem('criminal_check_photo');
   };
 
   return (

@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import BottomBar from '../components/BottomBar';
 import quizData from '../data/quizQuestions.json';
-//
 import YouTube from 'react-native-youtube-iframe';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -19,7 +18,6 @@ const EligibilityQuiz = () => {
   const currentQuestion = quizData[currentQuestionIndex];
   const [dob, setDob] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  //
   const [internetConnected, setInternetConnected] = useState(true);
 
   // Internet connectivity listener
@@ -51,7 +49,7 @@ const EligibilityQuiz = () => {
     loadProgress();
   }, []);
 
-  // Save progress to AsyncStorage
+  // Save progress to AsyncStorage  
   const saveProgress = async (index, userAnswers) => {
     try {
       const progressData = JSON.stringify({ savedIndex: index, savedAnswers: userAnswers });
@@ -60,14 +58,14 @@ const EligibilityQuiz = () => {
       console.error('Failed to save quiz progress:', error);
     }
   };
-
+  
   // Save answer for current question
   const handleAnswer = (answer) => {
     const updatedAnswers = { ...answers, [currentQuestion.id]: answer };
     setAnswers(updatedAnswers);
     saveProgress(currentQuestionIndex, updatedAnswers)
   };
-
+  
   // Render input based on question type
   const renderInputForQuestion = (question) => {
     switch (question.type) {
@@ -120,10 +118,10 @@ const EligibilityQuiz = () => {
       case 'yesno':
         return (
           <View style={styles.yesNoContainer}>
-            <TouchableOpacity style={styles.yesNoButton} onPress={() => handleAnswer("yes")}>
+            <TouchableOpacity style={styles.yesNoButton} onPress={() => handleAnswer("Yes")}>
               <Text style={styles.yesNoText}>Yes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.yesNoButton} onPress={() => handleAnswer("no")}>
+            <TouchableOpacity style={styles.yesNoButton} onPress={() => handleAnswer("No")}>
               <Text style={styles.yesNoText}>No</Text>
             </TouchableOpacity>
           </View>
@@ -199,7 +197,7 @@ const EligibilityQuiz = () => {
     const score = calculateTotalScore();
     setTotalScore(score);
     setShowResult(true);
-
+    await AsyncStorage.setItem('quiz_total_score', JSON.stringify(totalScore));
     try{
       await AsyncStorage.setItem('quiz_answers', JSON.stringify(answers));
     } catch (error){
@@ -249,7 +247,7 @@ const EligibilityQuiz = () => {
       {showResult ? (
         <View style={styles.resultContainer}>
           <Text style={styles.resultText}>Your score: {totalScore} / 35</Text>
-          <Text style={styles.resultEligibility}>{totalScore > 10 ? `You scored ${totalScore}. This makes you eligible!` : "Unfortunately, you are not eligible to immigrate to Panama with your current status. Please contact us for further help."}</Text> {/* Eligible if score above 10 */}
+          <Text style={styles.resultEligibility}>{totalScore > 10 ? `You are eligible to immigrate to Panama!` : "Unfortunately, you are not eligible to immigrate to Panama with your current status. Please contact us for further help."}</Text> {/* Eligible if score above 10 */}
           <Button title="Restart Quiz" onPress={() => {setAnswers({}); setCurrentQuestionIndex(0); setShowResult(false); saveProgress(0, {});}} /> {/* Restart Button */}
         </View>
       ) : (
