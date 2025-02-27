@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { Cell, Section, TableView } from 'react-native-tableview-simple'
 import BottomBar from '../components/BottomBar';
+import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window') //Get width of device - responsive design
+const { width } = Dimensions.get('window');
 
 // Custom component to display cells on homescreen
 const HomeScreenCell = ({ title, imgUri, action }) => {
@@ -23,7 +24,7 @@ function HomeScreen({ route, navigation }){
   const { userDetails } = route.params || {};
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         <TableView>
           <Section header="" hideSeparator="true" separatorTintColor="#ccc">
@@ -47,27 +48,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: colors.primaryWhite
   },
   welcome: {
-    paddingVertical: 25,
-    fontSize: 30,
+    paddingVertical: width * 0.06,
+    fontSize: width * 0.08,
     fontWeight: 'bold',
     alignSelf: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.1)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2
+    textShadowRadius: 2,
+    color: colors.primaryBlack
   },
   cellView: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: width / 3.5,
-    width: width / 1.1,
-    marginVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#4a90e2', 
+    height: width * 0.3,
+    width: width * 0.9,
+    marginVertical: width * 0.025,
+    paddingHorizontal: width * 0.04,
+    backgroundColor: colors.secondaryBlue, 
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: colors.primaryBlack,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -77,15 +80,15 @@ const styles = StyleSheet.create({
     height: '90%', 
     width: '35%',
     borderRadius: 15, 
-    marginRight: 15
+    marginRight: width * 0.06
   },
   cellText: {
-    fontSize: 22,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
-    color: 'white',
+    color: colors.primaryWhite,
     flexShrink: 1 
   },
   bottomCell: {
-    marginBottom: 60
+    marginBottom: width * 0.15
   }
 });

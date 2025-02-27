@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions} from 'react-native';
 import { useState, useEffect } from 'react';
 import { DateTime } from "luxon";
 import { AntDesign } from '@expo/vector-icons';
@@ -6,6 +6,9 @@ import { Accelerometer } from 'expo-sensors';
 import * as Location from 'expo-location';
 import prosAndConsData from '../data/prosAndCons.json'; 
 import BottomBar from '../components/BottomBar';
+import { colors } from '../components/colors';
+
+const { width } = Dimensions.get('window');
 
 function WhyPanama({ route }){
   const { userDetails } = route.params || {};

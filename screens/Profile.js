@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, Button, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, SafeAreaView, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import BottomBar from '../components/BottomBar';
+import { colors } from '../components/colors';
+
+const { width } = Dimensions.get('window');
 
 const quiz_progress_key = 'quiz_progress';
 
@@ -121,63 +124,63 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    //alignItems: 'center', 
-    padding: 20,
+    backgroundColor: colors.primaryWhite, 
+    padding: width * 0.05,
   },
   scrollContainer: {
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 40, 
+    padding: width * 0.05,
+    paddingBottom: width * 0.1, 
   },
   title: {
-    fontSize: 28,
+    fontSize: width * 0.08,
     fontWeight: '700',
-    marginVertical: 10,
+    marginVertical: width * 0.025,
     textAlign: 'center', 
-    width: '100%' //
+    width: '100%',
+    color: colors.primaryBlack
   },
   detailsContainer: {
     width: '100%',
-    marginVertical: 20,
+    marginVertical: width * 0.05,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.greyBorder,
     borderRadius: 8,
     overflow: 'hidden',
   },
   detailRow: {
     flexDirection: 'row',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingVertical: width * 0.03,
+    paddingHorizontal: width * 0.04,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    backgroundColor: '#f9f9f9',
+    borderBottomColor: colors.primaryBlue,
+    backgroundColor: 'white',
   },
   lastDetailRow: {
     borderBottomWidth: 0,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.primaryWhite,
   },
   detailLabel: {
     flex: 1,
-    fontSize: 18,
+    fontSize: width * 0.05,
     fontWeight: '600',
-    color: '#555',
+    color: colors.primaryBlack,
   },
   detailValue: {
     flex: 1,
-    fontSize: 18,
-    color: '#333',
+    fontSize: width * 0.05,
+    color: colors.primaryBlack,
     textAlign: 'right',
   },
   warningContainer: {
-    marginVertical: 20,
-    padding: 15,
+    marginVertical: width * 0.05,
+    padding: width * 0.04,
     backgroundColor: '#ffcccb',
     borderRadius: 5,
     alignSelf: 'stretch',
   },
   warningText: {
-    fontSize: 16,
+    fontSize: width * 0.045,
     fontWeight: 'bold',
     color: '#d9534f',
     textAlign: 'center',

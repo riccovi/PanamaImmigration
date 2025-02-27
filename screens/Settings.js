@@ -1,10 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image, Animated, PanResponder } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image, Animated, PanResponder, Dimensions } from 'react-native';
 import { TableView, Section, Cell } from 'react-native-tableview-simple';
 import Slider from '@react-native-community/slider';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics'
 import BottomBar from '../components/BottomBar';
+import { colors } from '../components/colors';
+
+const { width } = Dimensions.get('window');
 
 function Settings({ route, navigation }){
     const { userDetails } = route.params || {};
@@ -146,7 +149,7 @@ function Settings({ route, navigation }){
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>Credits</Text>
                     <Text style={styles.modalHeader}>Packages Used</Text>
-                    <Text style={styles.modalText}>Navigation, Async Storage, File System, Tableview, Bottom Tab, Icons, Slider, Picker, Location, Luxon, Camera, Image Picker</Text>
+                    <Text style={styles.modalText}>Navigation, Async Storage, File System, Tableview, Bottom Tab, Icons, Slider, Picker, Location, Luxon, Camera, Image Picker, Youtube Iframe, Netinfo, Webview, Haptics, Sensors</Text>
                     <Text style={styles.modalHeader}>Assets From Unsplash</Text>
                     <Text style={styles.modalText}>
                         <Text onPress={() => Linking.openURL('https://unsplash.com/@luchox23?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash')} style={styles.link}>Luis Gonzalez</Text>,{' '}

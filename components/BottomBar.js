@@ -1,6 +1,9 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from './colors';
+
+const { width } = Dimensions.get('window');
 
 const BottomBar = ({ userDetails}) => {
     const navigation = useNavigation();
@@ -32,14 +35,10 @@ const styles = StyleSheet.create({
         right: 0,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        backgroundColor: '#333',
-        paddingVertical: 10,
+        backgroundColor: colors.primaryBlack,
+        paddingVertical: width * 0.02,
     },
     button: {
-        padding: 10,
-    },
-    text: {
-        color: 'white',
-        fontSize: 16,
+        padding: width * 0.03,
     },
 });

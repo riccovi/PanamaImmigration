@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, SafeAreaView, TextInput, Switch, TouchableOpacity, Alert, Modal } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, SafeAreaView, TextInput, Switch, TouchableOpacity, Alert, Modal, Dimensions } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons';
+import { colors } from '../components/colors';
+
+const { width } = Dimensions.get('window');
 
 function LogIn({ navigation }){
   const [email, setEmail] = useState('');
@@ -252,7 +255,7 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     image: {
       flex: 1,
@@ -265,97 +268,102 @@ const styles = StyleSheet.create({
     },
   
     loginTop: {
-      //flex: 1,
       justifyContent: 'flex-end',
       padding: '10%'
     },
     loginTextTop: {
-      fontSize: 33,
-      fontWeight:"bold"
+      fontSize: width * 0.1,
+      fontWeight:"bold",
+      color: colors.primaryBlack
     },
   
     loginMiddle: {
       paddingBottom: '10%',
-      paddingLeft:"9%",
-      paddingRight:"9%"
+      paddingLeft: "9%",
+      paddingRight: "9%"
     },
     loginTextMiddle: {
-      fontSize: 10
+      fontSize: width * 0.06
     },
 
     loginButtonSignup: {
       width: "90%",
-      height: 60,
-      borderRadius: 35,
+      height: width * 0.15,
+      borderRadius: width * 0.09,
       marginLeft:"5%",
-      marginBottom: 10,
-      backgroundColor: "black",
+      marginBottom: width * 0.025,
+      backgroundColor: colors.primaryBlack,
       alignContent:"center",
       justifyContent:"center"
     },
     loginTextSignup: {
-      textAlign:"center",
-      color:"white",
-      fontWeight:"bold",
-      fontSize:25
+      textAlign: "center",
+      color: colors.primaryWhite,
+      fontWeight: "bold",
+      fontSize: width * 0.07
     },
 
     modalContainer: {
-        flex: 1, 
-        justifyContent: "center", 
-        backgroundColor: "rgba(0,0,0,0.5)" // black with alpha
+      flex: 1, 
+      justifyContent: "center", 
+      backgroundColor: "rgba(0,0,0,0.5)" 
     },
     modalView: {
-        backgroundColor: "white",
-        padding: 20,
-        marginHorizontal: 40,
-        borderRadius: 10
+      backgroundColor: colors.primaryWhite,
+      padding: width * 0.06,
+      marginHorizontal: width * 0.11,
+      borderRadius: 10
     },
     modalTitle: {
-        fontSize: 22,
-        fontWeight: "bold",
-        marginBottom: 15
+      fontSize: width * 0.07,
+      fontWeight: "bold",
+      marginBottom: width * 0.04,
+      color: colors.primaryBlack
     },
     input: {
-        borderWidth: 1, 
-        padding: 10, 
-        marginVertical: 10, 
-        borderRadius: 5
+      borderWidth: 1, 
+      padding: width * 0.03, 
+      marginVertical: width * 0.04, 
+      borderRadius: 5,
+      borderColor: colors.greyBorder
     },
     eyeIcon: {
       position: 'absolute',
-      right: 10,
+      right: width * 0.03,
       top: '50%',
       transform: [{ translateY: -12 }],
     },
     switchContainer: {
-        flexDirection: "row", 
-        alignItems: "center", 
-        marginBottom: 5,
-        paddingHorizontal: 30
+      flexDirection: "row", 
+      alignItems: "center", 
+      marginBottom: width * 0.015,
+      paddingHorizontal: width * 0.08
     },
     switchText: {
-      fontSize: 15
+      fontSize: width * 0.045,
+      color: colors.primaryBlack
     },  
     modalButton: {
-        backgroundColor: "black", 
-        padding: 10, 
-        marginTop: 10, 
-        borderRadius: 5, 
-        alignItems: "center"
+      backgroundColor: colors.primaryBlue, 
+      padding: width * 0.03, 
+      marginTop: width * 0.04, 
+      borderRadius: 5, 
+      alignItems: "center"
     },
     buttonText: {
-        color: "white",
-        fontSize: 18
+      color: colors.primaryWhite,
+      fontSize: width * 0.05
     },
     closeButton: {
-        marginTop: 20, 
-        alignItems: "center",
+      marginTop: width * 0.05, 
+      alignItems: "center",
     },
     closeText: {
-        color: 'red'
+      color: 'red',
+      fontSize: width * 0.045,
     },
     forgotText: {
-        color: 'darkblue'
+      color: colors.secondaryBlue,
+      fontSize: width * 0.045
     }
   });

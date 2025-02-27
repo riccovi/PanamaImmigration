@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomBar from '../components/BottomBar';
+import { colors } from '../components/colors';
+
+const { width } = Dimensions.get('window');
 
 function CriminalCheck({ route }) {
   const { userDetails } = route.params || {};
@@ -116,55 +119,58 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: width * 0.05,
+    backgroundColor: colors.primaryWhite
   },
   button: {
-    backgroundColor: '#333',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    backgroundColor: colors.primaryBlue,
+    paddingVertical: width * 0.03,
+    paddingHorizontal: width * 0.05,
     borderRadius: 5,
-    marginVertical: 10,
+    marginVertical: width * 0.03,
     width: '80%',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: colors.primaryWhite,
+    fontSize: width * 0.05,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: width * 0.8,
+    height: width * 0.8,
     borderWidth: 2,
-    borderColor: '#333',
+    borderColor: colors.primaryBlue,
     borderRadius: 10,
-    marginVertical: 20,
+    marginVertical: width * 0.05,
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 10,
-    marginVertical: 10,
+    paddingHorizontal: width * 0.03,
+    marginVertical: width * 0.03,
   },
   buttonRow: {
-    backgroundColor: '#333',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    backgroundColor: colors.primaryBlue,
+    paddingVertical: width * 0.03,
+    paddingHorizontal: width * 0.03,
     borderRadius: 5,
     flex: 1,
-    marginHorizontal: 5,
+    marginHorizontal: width * 0.01,
     alignItems: 'center',
   },
   deleteButton: {
     backgroundColor: 'red',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
+    color: colors.primaryBlack
   },
   infoText: {
-    fontSize: 20,
+    fontSize: width * 0.055,
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: width * 0.03,
+    color: colors.primaryBlack
   }, 
 });
