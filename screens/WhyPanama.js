@@ -7,7 +7,8 @@ import * as Location from 'expo-location';
 import prosAndConsData from '../data/prosAndCons.json'; 
 import BottomBar from '../components/BottomBar';
 
-function WhyPanama({}){
+function WhyPanama({ route }){
+  const { userDetails } = route.params || {};
   const [errorMsg, setErrorMsg] = useState(null);
   const [userWeatherData, setUserWeatherData] = useState(null);
   const [panamaWeatherData, setPanamaWeatherData] = useState(null);
@@ -127,7 +128,6 @@ function WhyPanama({}){
           {errorMsg ? (
             <>
               <Text style={styles.errorText}>{errorMsg}</Text>
-              <Text style={styles.instructions}>To change your location permissions, open your device's Settings, find this app, and enable Location.</Text>
             </>
           ) : userWeatherData ? (
             <>
@@ -203,7 +203,7 @@ function WhyPanama({}){
           </View>
         </View>
 
-        <BottomBar />
+        <BottomBar userDetails={userDetails}/>
       </ScrollView>
     )
 }

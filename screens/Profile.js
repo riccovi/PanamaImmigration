@@ -6,10 +6,10 @@ import BottomBar from '../components/BottomBar';
 
 const quiz_progress_key = 'quiz_progress';
 
-const Profile = () => {
+const Profile = ({ route }) => {
+  const { userDetails } = route.params || {};
   const [quizData, setQuizData] = useState({});
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [totalScore, setTotalScore] = useState(null);
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -22,12 +22,6 @@ const Profile = () => {
             setQuizData(savedAnswers);
             setQuizCompleted(Object.keys(savedAnswers).length === 16);
           }
-          //Total Score
-          const savedScore = await AsyncStorage.getItem('quiz_total_score');
-          if (savedScore) {
-            setTotalScore(JSON.parse(savedScore));
-          }
-          
         } catch (error) {
           console.error('Failed to load data:', error);
         }
@@ -105,19 +99,19 @@ const Profile = () => {
           {!quizCompleted && (
             <View style={styles.warningContainer}>
               <Text style={styles.warningText}>⚠️ You haven't completed the quiz yet!</Text>
-              <Button title="Complete Quiz" onPress={() => navigation.navigate('EligibilityQuiz')} />
+              <Button title="Complete Quiz" onPress={() => navigation.navigate('EligibilityQuiz', { userDetails })} />
             </View>
           )}
         </>
       ) : (
         <View style={styles.warningContainer}>
           <Text style={styles.warningText}>❗ Please fill out the eligibility quiz first.</Text>
-          <Button title="Start Quiz" onPress={() => navigation.navigate('EligibilityQuiz')} />
+          <Button title="Start Quiz" onPress={() => navigation.navigate('EligibilityQuiz', { userDetails })} />
         </View>
       )}
 
       </ScrollView>
-      <BottomBar />
+      <BottomBar userDetails={userDetails}/>
     </SafeAreaView>
   );
 };

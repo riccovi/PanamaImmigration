@@ -4,7 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomBar from '../components/BottomBar';
 
-function CriminalCheck() {
+function CriminalCheck({ route }) {
+  const { userDetails } = route.params || {};
   const [selectedImage, setSelectedImage] = useState(null);
 
   // If there is, load any previously saved image from AsyncStorage
@@ -103,7 +104,7 @@ function CriminalCheck() {
           <Text style={styles.infoText}>Face not found in our database. Good news. You are not a criminal!</Text>
         </>
       )}
-    <BottomBar />
+    <BottomBar userDetails={userDetails}/>
     </View>
   );
 }

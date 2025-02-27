@@ -10,7 +10,8 @@ import NetInfo from '@react-native-community/netinfo';
 
 const quiz_progress_key = 'quiz_progress';
 
-const EligibilityQuiz = () => {
+const EligibilityQuiz = ({ route }) => {
+  const { userDetails } = route.params || {};
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [totalScore, setTotalScore] = useState(null);
@@ -289,7 +290,7 @@ const EligibilityQuiz = () => {
         <Text style={styles.videoPlaceholderText}>Internet connection required to view the eligibility process video.</Text>
       )}
       </ScrollView>
-      <BottomBar />
+      <BottomBar userDetails={userDetails}/>
     </SafeAreaView>
   )
 }

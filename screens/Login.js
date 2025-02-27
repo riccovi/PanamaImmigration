@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform
 import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons';
 
-function LogIn({navigation}){
+function LogIn({ navigation }){
   const [email, setEmail] = useState('');
   const [modalVisible, setModalVisible] = useState(null) // 'signup' or 'login' or 'null'
   const [password, setPassword] = useState("");
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
       paddingRight:"9%"
     },
     loginTextMiddle: {
-      fontSize: 20
+      fontSize: 10
     },
 
     loginButtonSignup: {

@@ -8,13 +8,13 @@ import BottomBar from '../components/BottomBar';
 
 
 
-function Settings({ route }){
+function Settings({ route, navigation }){
+    const { userDetails } = route.params || {};
     const [modalVisible, setModalVisible] = useState(false);  // Credits modal
     const [infoModalVisible, setInfoModalVisible] = useState(false); // Info modal
     const [detailsModalVisible, setDetailsModalVisible] = useState(false); // Account details modal
     const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false); // Confirm deletion modal
     const [fontSize, setFontSize] = useState(16); // Default font size
-    const { userDetails } = route.params || {};
 
     const handleDeleteAccount = async () => {
         try{
@@ -152,7 +152,7 @@ function Settings({ route }){
             </View>
         </Modal>        
 
-        <BottomBar />
+        <BottomBar userDetails={userDetails}/>
       </SafeAreaView>
     )
 }

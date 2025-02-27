@@ -6,7 +6,7 @@ import BottomBar from '../components/BottomBar';
 const { width } = Dimensions.get('window') //Get width of device - responsive design
 
 // Custom component to display cells on homescreen
-const HomeScreenCell = ({title, imgUri, action}) => {
+const HomeScreenCell = ({ title, imgUri, action }) => {
   return (
     <Cell cellContentView={
       <TouchableOpacity onPress={action}>
@@ -28,11 +28,11 @@ function HomeScreen({ route, navigation }){
         <TableView>
           <Section header="" hideSeparator="true" separatorTintColor="#ccc">
             <Text style={styles.welcome}>Welcome, {userDetails?.username || "Guest"}!</Text>
-            <HomeScreenCell title="Why Panama" imgUri={require('../assets/panama-flag.jpg')} action={() => navigation.navigate("WhyPanama")} />
-            <HomeScreenCell title="Eligibility Quiz" imgUri={require('../assets/quiz-pic.jpg')} action={() => navigation.navigate("EligibilityQuiz")} />
-            <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck")} />
-            <HomeScreenCell title="Profile" imgUri={require('../assets/profile-pic.jpg')} action={() => navigation.navigate("Profile")} />
-            <HomeScreenCell title="Settings" imgUri={require('../assets/settings-pic.jpg')} action={() => navigation.navigate("Settings")} /> 
+            <HomeScreenCell title="Why Panama" imgUri={require('../assets/panama-flag.jpg')} action={() => navigation.navigate("WhyPanama", { userDetails })} />
+            <HomeScreenCell title="Eligibility Quiz" imgUri={require('../assets/quiz-pic.jpg')} action={() => navigation.navigate("EligibilityQuiz", { userDetails })} />
+            <HomeScreenCell title="Criminal Check" imgUri={require('../assets/camera-pic.jpg')} action={() => navigation.navigate("CriminalCheck", { userDetails })} />
+            <HomeScreenCell title="Profile" imgUri={require('../assets/profile-pic.jpg')} action={() => navigation.navigate("Profile", { userDetails })} />
+            <HomeScreenCell title="Settings" imgUri={require('../assets/settings-pic.jpg')} action={() => navigation.navigate('Settings', { userDetails })} /> 
          </Section>
         </TableView>
       </ScrollView>
@@ -89,44 +89,3 @@ const styles = StyleSheet.create({
     marginBottom: 60
   }
 });
-
-/*
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    safeArea: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#fff'
-    },
-    welcome: {
-      padding: 30,
-      fontSize: 25,
-      fontWeight: 'bold',
-      alignSelf: 'center'
-    },
-
-    cellView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: width/3,
-      width: width/1.1,
-      marginVertical: 15,
-      backgroundColor: '#accbfc',
-      borderRadius: 50
-    },
-    cellImage: {
-      height: '100%', 
-      width: '40%',
-      borderRadius: 50,
-      marginRight: '10%'
-    },
-    cellText: {
-      fontSize: 20,
-      fontWeight: 'bold'
-    }
-  });
-  */
