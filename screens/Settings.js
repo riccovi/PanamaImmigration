@@ -1,12 +1,10 @@
-import { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Modal, Button, Alert, StyleSheet, Linking, Image, Animated, PanResponder } from 'react-native';
 import { TableView, Section, Cell } from 'react-native-tableview-simple';
 import Slider from '@react-native-community/slider';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics'
 import BottomBar from '../components/BottomBar';
-
-
 
 function Settings({ route, navigation }){
     const { userDetails } = route.params || {};
@@ -40,6 +38,32 @@ function Settings({ route, navigation }){
             Alert.alert("Error", "An error occurred while deleting your account.");
         }
     }
+    
+    // Draggable card that springs back when released
+    const pan = useRef(new Animated.ValueXY()).current;
+    const [springFriction, setSpringFriction] = useState(5); // Initial friction value
+    
+    const panResponder = useRef(
+        PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: () => {
+            pan.setOffset({ x: pan.x._value, y: pan.y._value });
+            pan.setValue({ x: 0, y: 0 });
+        },
+        onPanResponderMove: Animated.event(
+            [null, { dx: pan.x, dy: pan.y }],
+            { useNativeDriver: false }
+        ),
+        onPanResponderRelease: () => {
+            pan.flattenOffset();
+            Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            friction: springFriction,
+            useNativeDriver: false,
+            }).start();
+        },
+        })
+    ).current;
 
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -63,6 +87,7 @@ function Settings({ route, navigation }){
                         </TouchableOpacity>} />
                 </Section>
                 {/* Display Header */}
+                {/*
                 <Section header="Display" headerTextStyle={styles.headerText}>
                     <Cell cellContentView={
                         <View style={styles.menuItem}>
@@ -71,6 +96,7 @@ function Settings({ route, navigation }){
                             <Text style={styles.fontSizeLabel}>{fontSize}px</Text>
                         </View>} />
                 </Section>
+                */}
                 {/* Account Header */}
                 <Section header="Account" headerTextStyle={styles.headerText}>
                     {/* Details */}
@@ -88,6 +114,17 @@ function Settings({ route, navigation }){
                             </View>
                         </TouchableOpacity>} />
                 </Section>
+                
+                {/* Draggable Card */}                
+                <View style={styles.dragContainer}>
+                    <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), styles.card]}>
+                        <Text style={styles.cardText}>Bonus - Drag Me!</Text>
+                    </Animated.View>
+                    <View style={styles.sliderContainer}>
+                        <Text style={styles.sliderLabel}>Spring Friction: {springFriction}</Text>
+                        <Slider style={styles.slider} minimumValue={1} maximumValue={10} step={1} value={springFriction} onValueChange={(value) => setSpringFriction(value)}/>
+                    </View>
+                </View>
 
             </TableView>
         </ScrollView>
@@ -234,5 +271,34 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
-    }
+    },
+    // Draggable Card
+    dragContainer: { 
+        flex: 1,
+        justifyContent: 'center', 
+        alignItems: 'center' 
+    },
+    card: {
+        width: 100,
+        height: 100,
+        backgroundColor: 'skyblue',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    cardText: { 
+        color: 'white', 
+        fontSize: 18 
+    },
+    sliderContainer: { 
+        marginTop: 10, 
+        width: '80%' 
+    },
+    slider: { 
+        width: '100%' 
+    },
+    sliderLabel: { 
+        textAlign: 'center', 
+        marginBottom: 10 
+    },
 });
