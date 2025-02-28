@@ -60,29 +60,12 @@ function WhyPanama({ route }){
   const diffInMinutes = userOffset - panamaOffset;
   const diffInHours = diffInMinutes / 60;
   let timeDiffText = "";
-  if (diffInHours > 1) {
-    timeDiffText = `You are ${diffInHours} hours behind Panama time.`; // hours (plural)
-  } else if (diffInHours == 1) {
-    timeDiffText = `You are 1 hour behind Panama time.`; // hour (singular)
-  } else if (diffInHours < -1) {
-    timeDiffText = `You are ${Math.abs(diffInHours)} hours ahead of Panama time.`; // hours (plural)
-  } else if (diffInHours == -1) {
-    timeDiffText = `You are 1 hour ahead of Panama time.`; // hour (singular)
-  } else {
-    timeDiffText = "Your time is the same as Panama time.";
-  }
-
-  // Helper function extracting precipitation info
-  const getPrecipitation = (data) => {
-    if (data.rain && data.rain["1h"]) {
-      return `${data.rain["1h"]} mm`;
-    } else if (data.snow && data.snow["1h"]) {
-      return `${data.snow["1h"]} mm`;
-    } else {
-      return "0 mm";
-    }
-  };
-
+  if (diffInHours > 1) { timeDiffText = `You are ${diffInHours} hours behind Panama time.`; } // hours (plural)
+  else if (diffInHours == 1) { timeDiffText = `You are 1 hour behind Panama time.`; } // hour (singular)
+  else if (diffInHours < -1) { timeDiffText = `You are ${Math.abs(diffInHours)} hours ahead of Panama time.`; } // hours (plural)
+  else if (diffInHours == -1) { timeDiffText = `You are 1 hour ahead of Panama time.`; } // hour (singular)
+  else { timeDiffText = "Your time is the same as Panama time."; }
+  
   // Pros and cons table
   const pros = prosAndConsData.find((item) => item.type === "Pros")?.content || [];
   const cons = prosAndConsData.find((item) => item.type === "Cons")?.content || []; 
@@ -92,7 +75,7 @@ function WhyPanama({ route }){
   const handlePrev = () => {
     if (prosConsIndex > 0) setProsConsIndex(prosConsIndex - 1);
   };
-
+  
   // Accelerometer subscription for shake detection
   useEffect(() => {
     const shakeThreshold = 1.7; // Adjust this threshold based on testing
@@ -111,8 +94,52 @@ function WhyPanama({ route }){
     return () => subscription && subscription.remove();
   }, [lastShakeTime, prosConsIndex]);
 
-  // Bold pro/con header content
-  const renderProConText = (text) => {
+  // Custom component displaying weather details in a card format
+  const WeatherCard = ({ weatherData }) => {
+    const getPrecipitation = (data) => {
+      if (data.rain && data.rain["1h"]) return `${data.rain["1h"]} mm`;
+      else if (data.snow && data.snow["1h"]) return `${data.snow["1h"]} mm`;
+      else return "0 mm";
+    };
+    return (
+      <View style={styles.weatherContainer}>
+        <Image style={styles.weatherIcon} source={{ uri: `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png` }}/>
+        <View style={styles.weatherDetails}>
+          <Text style={styles.weatherHead}>{weatherData.weather[0].description.toUpperCase()}</Text>
+          <Text style={styles.weatherText}>Temp: {weatherData.main.temp}°C</Text>
+          <Text style={styles.weatherText}>Precipitation: {getPrecipitation(weatherData)}</Text>
+          <Text style={styles.weatherText}>Humidity: {weatherData.main.humidity}%</Text>
+          <Text style={styles.weatherText}>Wind Speed: {weatherData.wind.speed} m/s</Text>
+        </View>
+      </View>
+    );
+  };
+
+  // General weather section component with header, error handling, or loading state
+  const WeatherSection = ({ header, errorMsg, weatherData, loadingMessage }) => (
+    <View style={styles.section}>
+      <Text style={styles.headerText}>{header}</Text>
+      {errorMsg ? (
+        <Text style={styles.errorText}>{errorMsg}</Text>
+      ) : weatherData ? (
+        <WeatherCard weatherData={weatherData} />
+      ) : (
+        <Text>{loadingMessage}</Text>
+      )}
+    </View>
+  );
+
+  // Time section showing Panama time, an image, and time difference text
+  const TimeSection = ({ panamaTime, isDaytime, timeDiffText }) => (
+    <View style={styles.section}>
+      <Text style={styles.headerText}>Panama Time: {panamaTime.toFormat("hh:mm a")}</Text>
+      <Image style={styles.panamaImage} source={isDaytime ? require("../assets/panama_day.jpg") : require("../assets/panama_night.jpg")}/>
+      <Text style={styles.weatherText}>{timeDiffText}</Text>
+    </View>
+  );
+
+  // Component to render bolded pro/con header in text
+  const RenderProConText = ({text}) => {
     // Split the text at the first colon to separate the heading
     const [heading, ...rest] = text.split(':');
     return (
@@ -123,92 +150,62 @@ function WhyPanama({ route }){
     );
   };
   
+  // Card component for a pro/con item
+  const ProConCard = ({ type, content }) => {
+    const backgroundColor = type === "Pro" ? "lightgreen" : "pink";
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* User's Weather Section */}
-        <View style={styles.section}>
-          <Text style={styles.headerText}>{userWeatherData ? `${userWeatherData.name}` : "Your current weather"}</Text>
-          {errorMsg ? (
-            <>
-              <Text style={styles.errorText}>{errorMsg}</Text>
-            </>
-          ) : userWeatherData ? (
-            <>
-            <View style={styles.weatherContainer}>
-              <Image style={styles.weatherIcon} source={{uri:`http://openweathermap.org/img/wn/${userWeatherData.weather[0].icon}@2x.png`}}/>
-              <View style={styles.weatherDetails}>
-              <Text style={styles.weatherHead}>{userWeatherData.weather[0].description.toUpperCase()}</Text>
-                <Text style={styles.weatherText}>Temp: {userWeatherData.main.temp}°C</Text>
-                <Text style={styles.weatherText}>Precipitation: {getPrecipitation(userWeatherData)}</Text>
-                <Text style={styles.weatherText}>Humidity: {userWeatherData.main.humidity}%</Text>
-                <Text style={styles.weatherText}>Wind Speed: {userWeatherData.wind.speed} m/s</Text>
-              </View>
-            </View>
-            </>
-          ) : (
-            <Text>Loading your weather data...</Text>
-          )}
-        </View>
-        
-        {/* Panama Weather Section */}
-        <View style={styles.section}>
-          <Text style={styles.headerText}>Panama City</Text>
-          {panamaWeatherData ? (
-            <>
-              <View style={styles.weatherContainer}>
-                <Image style={styles.weatherIcon} source={{ uri: `http://openweathermap.org/img/wn/${panamaWeatherData.weather[0].icon}@2x.png`}}/>
-                <View style={styles.weatherDetails}>
-                <Text style={styles.weatherHead}>{panamaWeatherData.weather[0].description.toUpperCase()}</Text>
-                  <Text style={styles.weatherText}>Temp: {panamaWeatherData.main.temp}°C</Text>
-                  <Text style={styles.weatherText}>Precipitation: {getPrecipitation(panamaWeatherData)}</Text>
-                  <Text style={styles.weatherText}>Humidity: {panamaWeatherData.main.humidity}%</Text>
-                  <Text style={styles.weatherText}>Wind Speed: {panamaWeatherData.wind.speed} m/s</Text>
-                </View>
-              </View>
-            </>
-          ) : (
-            <Text>Loading Panama weather data...</Text>
-          )}
-        </View>
+      <View style={[styles.prosCard, { backgroundColor }]}>
+        <Text style={styles.prosCardTitle}>{type}</Text>
+        <Text style={styles.prosCardContent}><RenderProConText text={content}/></Text>
+      </View>
+    );
+  };
 
-        {/* Time Section */}
-        <View style={styles.section}>
-          <Text style={styles.headerText}>Panama Time: {panamaTime.toFormat("hh:mm a")}</Text>
-          <Image style={styles.panamaImage} source={isDaytime ? require('../assets/panama_day.jpg') : require('../assets/panama_night.jpg')}/>
-          <Text style={styles.weatherText}>{timeDiffText}</Text>
-        </View>
-
-        {/* Pros and Cons */}
-        <View style={styles.prosContainer}>
-          <Text style={styles.prosHeader}>Pros & Cons of Panama</Text>
-          {/* Pro */}
-          <View style={[styles.prosCard, {backgroundColor: 'lightgreen'}]}>
-            <Text style={styles.prosCardTitle}>Pro</Text>
-            <Text style={styles.prosCardContent}>{renderProConText(pros[prosConsIndex])}</Text>
-          </View>
-          {/* Con */}
-          <View style={[styles.prosCard, {backgroundColor: 'pink'}]}>
-            <Text style={styles.prosCardTitle}>Con</Text>
-            <Text style={styles.prosCardContent}>{renderProConText(cons[prosConsIndex])}</Text>
-          </View>
-          {/* Navigation Arrows */}
-          <View style={styles.prosNavContainer}>
-            <TouchableOpacity onPress={handlePrev} disabled={prosConsIndex === 0}>
-              <AntDesign name="leftcircleo" size={32} color={prosConsIndex === 0 ? "gray" : "black"} />
-            </TouchableOpacity>
-            <Text style={styles.prosIndexText}>{prosConsIndex + 1} / {pros.length}</Text>
-            <TouchableOpacity onPress={handleNext} disabled={prosConsIndex === pros.length - 1}>
-              <AntDesign name="rightcircleo" size={32} color={prosConsIndex === pros.length - 1 ? "gray" : "black"} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.shakeHintContainer}>
-            <Text style={styles.shakeHintText}>Shake for next!</Text>
-          </View>
-        </View>
-
+  // Section component for pros and cons with navigation arrows
+  const ProsConsSection = ({ pros, cons, index, onNext, onPrev }) => (
+    <View style={styles.prosContainer}>
+      <Text style={styles.prosHeader}>Pros & Cons of Panama</Text>
+      <ProConCard type="Pro" content={pros[index]} />
+      <ProConCard type="Con" content={cons[index]} />
+      <View style={styles.prosNavContainer}>
+        <TouchableOpacity onPress={onPrev} disabled={index === 0}>
+          <AntDesign name="leftcircleo" size={32} color={index === 0 ? "gray" : "black"} />
+        </TouchableOpacity>
+        <Text style={styles.prosIndexText}>
+          {index + 1} / {pros.length}
+        </Text>
+        <TouchableOpacity onPress={onNext} disabled={index === pros.length - 1}>
+          <AntDesign name="rightcircleo" size={32} color={index === pros.length - 1 ? "gray" : "black"} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.shakeHintContainer}>
+        <Text style={styles.shakeHintText}>Shake for next!</Text>
+      </View>
+    </View>
+  );
+  
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* User Weather Section */}
+      <WeatherSection
+        header={userWeatherData ? userWeatherData.name : "Your current weather"}
+        errorMsg={errorMsg}
+        weatherData={userWeatherData}
+        loadingMessage="Loading your weather data..."
+      />
+      {/* Panama Weather Section */}
+      <WeatherSection
+        header="Panama City"
+        weatherData={panamaWeatherData}
+        loadingMessage="Loading Panama weather data..."
+      />
+      {/* Time Section */}
+      <TimeSection panamaTime={panamaTime} isDaytime={isDaytime} timeDiffText={timeDiffText} />
+      {/* Pros & Cons Section */}
+      <ProsConsSection pros={pros} cons={cons} index={prosConsIndex} onNext={handleNext} onPrev={handlePrev} />
         <BottomBar userDetails={userDetails}/>
-      </ScrollView>
-    )
+    </ScrollView>
+  )
 }
 
 export default WhyPanama;

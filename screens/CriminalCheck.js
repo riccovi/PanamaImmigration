@@ -7,6 +7,18 @@ import { colors } from '../components/colors';
 
 const { width, height } = Dimensions.get('window');
 
+// Custom component to render a set of action buttons.
+// It accepts an array of button configurations and an optional container style.
+const PhotoActionButtons = ({ buttons, containerStyle }) => (
+  <View style={containerStyle}>
+    {buttons.map((btn, index) => (
+      <TouchableOpacity key={index} style={btn.style} onPress={btn.onPress}>
+        <Text style={styles.buttonText}>{btn.title}</Text>
+      </TouchableOpacity>
+    ))}
+  </View>
+);
+
 function CriminalCheck({ route }) {
   const { userDetails } = route.params || {};
   const [selectedImage, setSelectedImage] = useState(null);
@@ -26,6 +38,7 @@ function CriminalCheck({ route }) {
 
     loadImage();
   }, []);
+
   // Save selected image in AsyncStorage
   const saveImage = async (image) => {
     try {
@@ -34,6 +47,7 @@ function CriminalCheck({ route }) {
       console.error('Failed to save image to storage', error);
     }
   };
+
   // Use device gallery
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -51,6 +65,7 @@ function CriminalCheck({ route }) {
      await saveImage(newImage);
     }
   };
+
   // Use device camera
   const takePhoto = async () => {
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -68,11 +83,23 @@ function CriminalCheck({ route }) {
       await saveImage(newImage);
     }
   };
+
   // Delete photo
   const deletePhoto = async () => {
     setSelectedImage(null);
     await AsyncStorage.removeItem('criminal_check_photo');
   };
+
+  // Button configurations for each state
+  const noImageButtons = [
+    { title: "Pick an image from gallery", onPress: pickImage, style: styles.button },
+    { title: "Take a photo", onPress: takePhoto, style: styles.button }
+  ];
+  const imageButtons = [
+    { title: "Gallery", onPress: pickImage, style: styles.buttonRow },
+    { title: "Camera", onPress: takePhoto, style: styles.buttonRow },
+    { title: "Delete", onPress: deletePhoto, style: [styles.buttonRow, styles.deleteButton] }
+  ];
 
   return (
     <View style={styles.container}>
@@ -80,12 +107,15 @@ function CriminalCheck({ route }) {
       {!selectedImage && (
         <>
           <Text style={styles.infoText}>To do a criminal check, we will need a photo of your face to scan through our database. Either select an image from the gallery or take a photo.</Text>
+          <PhotoActionButtons buttons={noImageButtons} />
+          {/*
           <TouchableOpacity style={styles.button} onPress={pickImage}>
             <Text style={styles.buttonText}>Pick an image from gallery</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={takePhoto}>
             <Text style={styles.buttonText}>Take a photo</Text>
           </TouchableOpacity>
+          */}
         </>
       )}
       {/* If image exists, display: header, image, row of buttons, info text*/}
@@ -93,6 +123,8 @@ function CriminalCheck({ route }) {
         <>
           <Text style={styles.headerText}>Looking good!</Text>
           <Image source={{ uri: selectedImage.localUri }} style={styles.image} />
+          <PhotoActionButtons buttons={imageButtons} containerStyle={styles.rowContainer} />
+          {/*}
           <View style={styles.rowContainer}>
             <TouchableOpacity style={styles.buttonRow} onPress={pickImage}>
               <Text style={styles.buttonText}>Gallery</Text>
@@ -104,6 +136,7 @@ function CriminalCheck({ route }) {
               <Text style={styles.buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>
+          */}
           <Text style={styles.infoText}>Face not found in our database. Good news. You are not a criminal!</Text>
         </>
       )}
@@ -128,7 +161,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: width * 0.05,
     borderRadius: 5,
     marginVertical: height * 0.015,
-    width: '80%',
+    minWidth: '80%',
     alignItems: 'center',
     minHeight: 45,
     maxHeight: 60,

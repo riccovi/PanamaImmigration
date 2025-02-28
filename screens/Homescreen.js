@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { Cell, Section, TableView } from 'react-native-tableview-simple'
 import BottomBar from '../components/BottomBar';

@@ -33,6 +33,32 @@ const Profile = ({ route }) => {
     }, [])
   );
 
+   // Mapping array for profile details
+   const detailsMapping = [
+    { key: "1", label: "Name", format: (data) => data ? `${data.prefix || ""} ${data.firstName || ""} ${data.surname || ""}`.trim() : "Not provided"},
+    { key: "2", label: "Country of Citizenship:" },
+    { key: "3", label: "Educational Qualifications:" },
+    { key: "4", label: "Age:" },
+    { key: "5", label: "Date of Birth:" },
+    { key: "6", label: "Marital Status:" },
+    { key: "7", label: "Dependents under 12:" },
+    { key: "8", label: "Dependents over 12:" },
+    { key: "9", label: "Contract of employment:" },
+    { key: "10", label: "Real estate above $300,000:" },
+    { key: "12", label: "English skills:", format: (value) => (value ? `${value}/10` : "Not provided")},
+    { key: "13", label: "Spanish skills:", format: (value) => (value ? `${value}/10` : "Not provided")},
+    { key: "14", label: "Health issues:" },
+    { key: "15", label: "Criminal record:" },
+  ];
+
+  // Custom component to display each detail row
+  const ProfileDetailRow = ({ label, value }) => (
+    <View style={styles.detailRow}>
+      <Text style={styles.detailLabel}>{label}</Text>
+      <Text style={styles.detailValue}>{value}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -41,6 +67,7 @@ const Profile = ({ route }) => {
       {Object.keys(quizData).length > 0 ? (
         <>
         <View style={styles.detailsContainer}>
+          {/*
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Name</Text>
             <Text style={styles.detailValue}>{quizData["1"] ? `${quizData["1"].prefix || ""} ${quizData["1"].firstName || ""} ${quizData["1"].surname || ""}`.trim(): "Not provided"}</Text>
@@ -97,6 +124,16 @@ const Profile = ({ route }) => {
             <Text style={styles.detailLabel}>Criminal record: </Text>
             <Text style={styles.detailValue}>{quizData["15"] || 'Not provided'}</Text>
           </View>
+          */}
+          {detailsMapping.map((detail) => {
+            const rawValue = quizData[detail.key];
+            const value = detail.format
+              ? detail.format(rawValue)
+              : rawValue || "Not provided";
+            return (
+              <ProfileDetailRow key={detail.key} label={detail.label} value={value} />
+            );
+          })}
         </View>
 
           {!quizCompleted && (
