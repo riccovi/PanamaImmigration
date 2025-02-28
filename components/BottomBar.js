@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from './colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const BottomBar = ({ userDetails}) => {
     const navigation = useNavigation();
@@ -36,8 +36,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: colors.primaryBlack,
-        paddingVertical: width * 0.02,
-    },
+        paddingVertical: height * 0.02,
+        minHeight: 50,
+        maxHeight: 80,
+      },
     button: {
         padding: width * 0.03,
     },

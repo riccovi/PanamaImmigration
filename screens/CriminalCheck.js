@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomBar from '../components/BottomBar';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 function CriminalCheck({ route }) {
   const { userDetails } = route.params || {};
@@ -119,21 +119,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: width * 0.05,
+    padding: height * 0.03,
     backgroundColor: colors.primaryWhite
   },
   button: {
     backgroundColor: colors.primaryBlue,
-    paddingVertical: width * 0.03,
+    paddingVertical: height * 0.02,
     paddingHorizontal: width * 0.05,
     borderRadius: 5,
-    marginVertical: width * 0.03,
+    marginVertical: height * 0.015,
     width: '80%',
     alignItems: 'center',
+    minHeight: 45,
+    maxHeight: 60,
   },
   buttonText: {
     color: colors.primaryWhite,
-    fontSize: width * 0.05,
+    fontSize: Math.max(10, Math.min(width * 0.04, 18)),
   },
   image: {
     width: width * 0.8,
@@ -141,23 +143,27 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.primaryBlue,
     borderRadius: 10,
-    marginVertical: width * 0.05,
+    marginVertical: height * 0.03,
+    maxWidth: 500,
+    maxHeight: 500,
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: width * 0.03,
-    marginVertical: width * 0.03,
+    marginVertical: height * 0.02,
   },
   buttonRow: {
     backgroundColor: colors.primaryBlue,
-    paddingVertical: width * 0.03,
+    paddingVertical: height * 0.02,
     paddingHorizontal: width * 0.03,
     borderRadius: 5,
     flex: 1,
     marginHorizontal: width * 0.01,
     alignItems: 'center',
+    minHeight: 40,
+    maxHeight: 60,
   },
   deleteButton: {
     backgroundColor: 'red',
@@ -168,9 +174,10 @@ const styles = StyleSheet.create({
     color: colors.primaryBlack
   },
   infoText: {
-    fontSize: width * 0.055,
+    fontSize: Math.max(16, Math.min(width * 0.05, 22)),
     textAlign: 'center',
-    marginVertical: width * 0.03,
-    color: colors.primaryBlack
+    marginVertical: height * 0.02,
+    color: colors.primaryBlack,
+    paddingBottom: width*0.1
   }, 
 });

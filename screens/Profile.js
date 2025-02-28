@@ -5,7 +5,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import BottomBar from '../components/BottomBar';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const quiz_progress_key = 'quiz_progress';
 
@@ -125,24 +125,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.primaryWhite, 
-    padding: width * 0.05,
+    padding: height * 0.03,
   },
   scrollContainer: {
     alignItems: 'center',
-    padding: width * 0.05,
-    paddingBottom: width * 0.1, 
+    padding: height * 0.03,
+    paddingBottom: height * 0.1,
   },
   title: {
-    fontSize: width * 0.08,
+    fontSize: Math.max(20, Math.min(width * 0.07, 28)),
     fontWeight: '700',
-    marginVertical: width * 0.025,
+    marginVertical: height * 0.025,
     textAlign: 'center', 
     width: '100%',
     color: colors.primaryBlack
   },
   detailsContainer: {
     width: '100%',
-    marginVertical: width * 0.05,
+    marginVertical: height * 0.03,
     borderWidth: 1,
     borderColor: colors.greyBorder,
     borderRadius: 8,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   detailRow: {
     flexDirection: 'row',
-    paddingVertical: width * 0.03,
+    paddingVertical: height * 0.03,
     paddingHorizontal: width * 0.04,
     borderBottomWidth: 1,
     borderBottomColor: colors.primaryBlue,
@@ -162,25 +162,25 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     flex: 1,
-    fontSize: width * 0.05,
+    fontSize: height*0.02,
     fontWeight: '600',
     color: colors.primaryBlack,
   },
   detailValue: {
     flex: 1,
-    fontSize: width * 0.05,
+    fontSize: height*0.02,
     color: colors.primaryBlack,
     textAlign: 'right',
   },
   warningContainer: {
-    marginVertical: width * 0.05,
-    padding: width * 0.04,
+    marginVertical: height * 0.03,
+    padding: height * 0.03,
     backgroundColor: '#ffcccb',
     borderRadius: 5,
     alignSelf: 'stretch',
   },
   warningText: {
-    fontSize: width * 0.045,
+    fontSize: Math.max(16, Math.min(width * 0.045, 22)),
     fontWeight: 'bold',
     color: '#d9534f',
     textAlign: 'center',

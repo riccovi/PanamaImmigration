@@ -9,7 +9,7 @@ import YouTube from 'react-native-youtube-iframe';
 import NetInfo from '@react-native-community/netinfo';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const quiz_progress_key = 'quiz_progress';
 
@@ -303,13 +303,13 @@ export default EligibilityQuiz;
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    padding: width * 0.05, 
-    paddingBottom: width * 0.1,
+    padding: height * 0.03, 
+    paddingBottom: height * 0.05,
     backgroundColor: colors.primaryWhite, 
   },
   contentContainer: {
     flexGrow: 1,
-    marginBottom: width * 0.05
+    marginBottom:  height * 0.03
   },
   questionContainer: { 
     flex: 1, 
@@ -317,19 +317,21 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   questionText: { 
-    fontSize: width * 0.055, 
-    marginBottom: width * 0.05, 
+    fontSize: Math.max(16, Math.min(width * 0.055, 24)), 
+    marginBottom: height * 0.03, 
     textAlign: 'center' ,
     color: colors.primaryBlack
   },
   input: { 
     width: '80%', 
-    height: width * 0.12, 
+    height: height * 0.09, 
     borderColor: colors.greyBorder, 
     borderWidth: 1, 
     paddingHorizontal: width * 0.03, 
-    marginBottom: width * 0.05, 
-    borderRadius: 5 
+    marginBottom: height * 0.03, 
+    borderRadius: 5,
+    minHeight: 40,
+    maxHeight: 60, 
   },
 
   dropdownContainer: { 
@@ -337,11 +339,11 @@ const styles = StyleSheet.create({
     borderColor: colors.greyBorder, 
     borderWidth: 1, 
     borderRadius: 5, 
-    marginBottom: width * 0.05 
+    marginBottom: height * 0.03 
   },
   picker: { 
     width: '100%', 
-    height: width * 0.15 
+    height: height * 0.1
   },
 
   compoundContainer: {
@@ -349,10 +351,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: width * 0.02,
+    marginBottom: height * 0.02,
   },
   compoundInput: {
-    height: width * 0.15,
+    height: height * 0.07,
     borderColor: colors.greyBorder,
     borderWidth: 1,
     borderRadius: 5,
@@ -361,14 +363,14 @@ const styles = StyleSheet.create({
   prefixContainer: {
     flex: 1,
     height: width * 0.15,
-    //minwidth: width * 0.5,
     borderColor: colors.greyBorder,
     borderWidth: 1,
     borderRadius: 5,
     marginRight: width * 0.01,
+    minWidth: width * 0.1,
   },
   prefixPicker: {
-    height: width * 0.15,
+    height:  height * 0.07,
     width: '100%',
   },
   nameInputContainer: {
@@ -378,27 +380,29 @@ const styles = StyleSheet.create({
 
   yesNoContainer: { 
     flexDirection: 'row', 
-    marginBottom: width * 0.05 
+    marginBottom: height * 0.03 
   },
   yesNoButton: { 
     backgroundColor: colors.primaryBlue, 
-    padding: width * 0.03, 
+    padding: height * 0.02, 
     borderRadius: 5, 
-    marginHorizontal: width * 0.08
+    marginHorizontal: width * 0.08,
+    minHeight: 40,
+    maxHeight: 60,
   },
   yesNoText: { 
     color: colors.primaryWhite, 
-    fontSize: width * 0.05
+    fontSize: Math.max(14, Math.min(width * 0.04, 18)),
   },
 
   navigationContainer: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    marginBottom: width * 0.05
+    marginBottom: height * 0.03
   },
 
   scrollbar: { 
-    marginTop: width * 0.03
+    marginTop: height * 0.01
   },
   scrollbarItem: { 
     width: width * 0.13, 
@@ -420,7 +424,7 @@ const styles = StyleSheet.create({
     opacity: 0.5
   }, 
   scrollbarText: { 
-    fontSize:  width * 0.05, 
+    fontSize:  Math.max(12, Math.min(width * 0.04, 16)), 
     color: colors.primaryWhite 
   },
 
@@ -430,27 +434,29 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   resultText: { 
-    fontSize: width * 0.08, 
+    fontSize: Math.max(18, Math.min(width * 0.07, 26)),
     fontWeight: 'bold', 
-    marginBottom: width * 0.03,
+    marginBottom: height * 0.02,
     color: colors.primaryBlack
   },
   resultEligibility: { 
-    fontSize: width * 0.065, 
-    marginBottom: width * 0.06,
+    fontSize: Math.max(16, Math.min(width * 0.06, 24)),
+    marginBottom:  height * 0.03,
     color: colors.primaryBlack
   },
 
   dateButton: {
     backgroundColor: colors.primaryBlue,
-    padding: width * 0.03,
+    padding: height * 0.02,
     borderRadius: 5,
     alignItems: 'center',
-    marginBottom: width * 0.05,
+    marginBottom: height * 0.03,
+    minHeight: 40,
+    maxHeight: 60,
   },
   dateButtonText: {
     color: colors.primaryWhite,
-    fontSize: width * 0.05,
+    fontSize: Math.max(14, Math.min(width * 0.04, 18)),
   },
 
   videoContainer: {
@@ -458,7 +464,7 @@ const styles = StyleSheet.create({
   },
   videoPlaceholderText: {
     textAlign: 'center',
-    fontSize: width * 0.05,
+    fontSize: Math.max(16, Math.min(width * 0.05, 22)),
     color: colors.primaryBlack
   },
 });

@@ -4,7 +4,7 @@ import { Cell, Section, TableView } from 'react-native-tableview-simple'
 import BottomBar from '../components/BottomBar';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 // Custom component to display cells on homescreen
 const HomeScreenCell = ({ title, imgUri, action }) => {
@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryWhite
   },
   welcome: {
-    paddingVertical: width * 0.06,
-    fontSize: width * 0.08,
+    paddingVertical: height * 0.03,
+    fontSize: Math.max(20, Math.min(width * 0.075, 30)),
     fontWeight: 'bold',
     alignSelf: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.1)',
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: width * 0.3,
     width: width * 0.9,
-    marginVertical: width * 0.025,
+    marginVertical: height * 0.015,
     paddingHorizontal: width * 0.04,
     backgroundColor: colors.secondaryBlue, 
     borderRadius: 20,
@@ -74,7 +74,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 6 
+    elevation: 6,
+    minHeight: 60,
+    maxHeight: 120, 
   },
   cellImage: {
     height: '90%', 
@@ -83,12 +85,12 @@ const styles = StyleSheet.create({
     marginRight: width * 0.06
   },
   cellText: {
-    fontSize: width * 0.06,
+    fontSize: Math.max(16, Math.min(width * 0.055, 24)),
     fontWeight: 'bold',
     color: colors.primaryWhite,
     flexShrink: 1 
   },
   bottomCell: {
-    marginBottom: width * 0.15
+    marginBottom: height * 0.08,
   }
 });

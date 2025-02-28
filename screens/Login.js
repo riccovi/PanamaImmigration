@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 function LogIn({ navigation }){
   const [email, setEmail] = useState('');
@@ -264,17 +264,19 @@ const styles = StyleSheet.create({
       height: '100%',
     },
     safeView: {
-      flex: 1
+      flex: 1,
     },
   
     loginTop: {
       justifyContent: 'flex-end',
-      padding: '10%'
+      paddingHorizontal: '10%',
+      paddingVertical: '5%',
     },
     loginTextTop: {
-      fontSize: width * 0.1,
+      fontSize: height*0.04,
       fontWeight:"bold",
-      color: colors.primaryBlack
+      color: colors.primaryBlack,
+      paddingTop: height*0.05
     },
   
     loginMiddle: {
@@ -283,24 +285,27 @@ const styles = StyleSheet.create({
       paddingRight: "9%"
     },
     loginTextMiddle: {
-      fontSize: width * 0.06
+      fontSize: Math.max(15, (height * 0.02)),
     },
 
     loginButtonSignup: {
       width: "90%",
-      height: width * 0.15,
-      borderRadius: width * 0.09,
+      height: height * 0.08,
+      borderRadius: height * 0.045,
       marginLeft:"5%",
-      marginBottom: width * 0.025,
+      marginBottom: height * 0.025,
       backgroundColor: colors.primaryBlack,
       alignContent:"center",
-      justifyContent:"center"
+      justifyContent:"center",
+      minHeight: 45,
+      maxHeight: 70,
     },
     loginTextSignup: {
       textAlign: "center",
       color: colors.primaryWhite,
       fontWeight: "bold",
-      fontSize: width * 0.07
+      fontSize: width * 0.07,
+      fontSize: Math.max(16, Math.min(width * 0.06, 24)),
     },
 
     modalContainer: {
@@ -310,22 +315,24 @@ const styles = StyleSheet.create({
     },
     modalView: {
       backgroundColor: colors.primaryWhite,
-      padding: width * 0.06,
+      padding: height * 0.03,
       marginHorizontal: width * 0.11,
       borderRadius: 10
     },
     modalTitle: {
-      fontSize: width * 0.07,
+      fontSize: Math.max(16, Math.min(width * 0.06, 24)),
       fontWeight: "bold",
-      marginBottom: width * 0.04,
+      marginBottom: height * 0.03,
       color: colors.primaryBlack
     },
     input: {
       borderWidth: 1, 
-      padding: width * 0.03, 
-      marginVertical: width * 0.04, 
+      padding: height * 0.02, 
+      marginVertical: height * 0.015, 
       borderRadius: 5,
-      borderColor: colors.greyBorder
+      borderColor: colors.greyBorder,
+      minHeight: 40,
+      maxHeight: 60,
     },
     eyeIcon: {
       position: 'absolute',
@@ -336,34 +343,34 @@ const styles = StyleSheet.create({
     switchContainer: {
       flexDirection: "row", 
       alignItems: "center", 
-      marginBottom: width * 0.015,
+      marginBottom: height * 0.015,
       paddingHorizontal: width * 0.08
     },
     switchText: {
-      fontSize: width * 0.045,
+      fontSize: Math.max(14, Math.min(width * 0.04, 18)),
       color: colors.primaryBlack
     },  
     modalButton: {
       backgroundColor: colors.primaryBlue, 
-      padding: width * 0.03, 
-      marginTop: width * 0.04, 
+      padding: height * 0.02,
+      marginTop: height * 0.02, 
       borderRadius: 5, 
       alignItems: "center"
     },
     buttonText: {
       color: colors.primaryWhite,
-      fontSize: width * 0.05
+      fontSize: Math.max(14, Math.min(width * 0.045, 18)),
     },
     closeButton: {
-      marginTop: width * 0.05, 
+      marginTop: height * 0.02, 
       alignItems: "center",
     },
     closeText: {
       color: 'red',
-      fontSize: width * 0.045,
+      fontSize: Math.max(14, Math.min(width * 0.045, 18)),
     },
     forgotText: {
-      color: colors.secondaryBlue,
-      fontSize: width * 0.045
+      color: colors.primaryBlack,
+      fontSize: Math.max(14, Math.min(width * 0.045, 18)),
     }
   });

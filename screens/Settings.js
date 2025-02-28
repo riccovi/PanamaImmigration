@@ -7,7 +7,7 @@ import * as Haptics from 'expo-haptics'
 import BottomBar from '../components/BottomBar';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 function Settings({ route, navigation }){
     const { userDetails } = route.params || {};
@@ -15,7 +15,6 @@ function Settings({ route, navigation }){
     const [infoModalVisible, setInfoModalVisible] = useState(false); // Info modal
     const [detailsModalVisible, setDetailsModalVisible] = useState(false); // Account details modal
     const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false); // Confirm deletion modal
-    const [fontSize, setFontSize] = useState(16); // Default font size
 
     const handleDeleteAccount = async () => {
         try{
@@ -203,32 +202,25 @@ const styles = StyleSheet.create({
     // Settings Menu
     safeArea: {
         flex: 1,
-        padding: 20,
-        backgroundColor: '#fff'
+        padding: height * 0.03,
+        backgroundColor: colors.primaryWhite
     },
     headerText: {
-        fontSize: 22,
+        fontSize: Math.max(height * 0.02, width*0.04),
         fontWeight: 'bold',
-        paddingVertical: 12
+        paddingVertical: width * 0.03,
     },  
     menuItem: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingVertical: 15,
-        paddingHorizontal: 5,
+        paddingVertical: width * 0.02,
+        paddingHorizontal: width * 0.02,
     },
     menuItemText: {
-        fontSize: 20,
-    },
-    // Slider
-    slider: {
-        width: 150,
-        marginLeft: 10,
-    },
-    fontSizeLabel: {
-        fontSize: 20,
-        marginLeft: 10,
+        fontSize: Math.max(16, Math.min(width * 0.05, 22)),
+        //fontSize: 10,
+        color: colors.primaryBlack
     },
     // Modal
     modalOverlay: {
@@ -238,37 +230,40 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalContent: {
-        width: 300,
-        backgroundColor: "white",
-        padding: 20,
+        width: width * 0.8,
+        backgroundColor: 'white',
+        padding: width * 0.05,
         borderRadius: 10,
         alignItems: "center",
     },
     modalTitle: {
-        fontSize: 20,
+        fontSize: Math.max(16, Math.min(width * 0.055, 24)),
         fontWeight: "bold",
-        marginBottom: 10,
+        marginBottom: width * 0.04,
+        color: colors.primaryBlack
     },
     modalHeader: {
-        fontSize: 16,
-        fontWeight: 'bold'
+        fontSize: Math.max(14, Math.min(width * 0.045, 20)),
+        fontWeight: 'bold',
+        color: colors.primaryBlack
     },
     modalText: {
-        fontSize: 16,
-        marginBottom: 20,
+        fontSize: Math.max(14, Math.min(width * 0.045, 20)),
+        marginBottom: height * 0.03,
+        color: colors.primaryBlack
     },
     creditsUol: {
         flexDirection: 'row',
     },
     logo: {
-        width: 40,  
-        height: 40, 
-        marginRight: 15,
+        width: width * 0.1,  
+        height: width * 0.1, 
+        marginRight: width * 0.04,
         resizeMode: 'contain'
     },
     link: {
-        color: 'blue',
-        textDecorationLine: 'underline'
+        color: colors.secondaryBlue,
+        textDecorationLine: 'underline',
     },
     buttonRow: {
         flexDirection: "row",
@@ -282,19 +277,19 @@ const styles = StyleSheet.create({
         alignItems: 'center' 
     },
     card: {
-        width: 100,
-        height: 100,
-        backgroundColor: 'skyblue',
+        width: width * 0.25,
+        height: width * 0.25,
+        backgroundColor: colors.primaryBlue,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
     cardText: { 
         color: 'white', 
-        fontSize: 18 
+        fontSize:  Math.max(14, Math.min(width * 0.05, 20)),
     },
     sliderContainer: { 
-        marginTop: 10, 
+        marginTop: height * 0.025, 
         width: '80%' 
     },
     slider: { 
@@ -302,6 +297,6 @@ const styles = StyleSheet.create({
     },
     sliderLabel: { 
         textAlign: 'center', 
-        marginBottom: 10 
+        color: colors.primaryBlack
     },
 });

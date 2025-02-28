@@ -8,7 +8,7 @@ import prosAndConsData from '../data/prosAndCons.json';
 import BottomBar from '../components/BottomBar';
 import { colors } from '../components/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 function WhyPanama({ route }){
   const { userDetails } = route.params || {};
@@ -215,103 +215,106 @@ export default WhyPanama;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    backgroundColor: '#fff',
+    paddingTop: height * 0.07,
+    paddingHorizontal: width * 0.05,
+    paddingBottom: height * 0.04,
+    backgroundColor: colors.primaryWhite,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: height * 0.04,
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: Math.max(18, Math.min(width * 0.06, 24)),
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: height * 0.02,
     textAlign: 'center',
   },
 
   errorText: {
-    fontSize: 18,
+    fontSize: Math.max(14, Math.min(width * 0.045, 20)),
     color: 'red',
-    textAlign: 'center',
-  },
-  instructions: {
-    fontSize: 16,
     textAlign: 'center',
   },
 
   weatherContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'lightblue', 
-    padding: 10,
+    backgroundColor: colors.primaryBlue, 
+    padding: height * 0.02,
     borderRadius: 10,
     width: '100%',
   },
   weatherIcon: {
-    width: 100,
-    height: 100,
+    width: width * 0.25,
+    height: width * 0.25,
   },
   weatherDetails: {
     flex: 1,
   },
   weatherHead: {
-    fontSize: 20,
-    marginVertical: 10,
+    fontSize: width * 0.055,
+    marginVertical: width * 0.02,
     textAlign: 'center',
     fontStyle: 'italic',
+    color: colors.primaryBlack
   },
   weatherText: {
-    fontSize: 16,
-    marginVertical: 4,
+    fontSize: Math.max(14, Math.min(width * 0.045, 20)),
+    marginVertical: height * 0.01,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: colors.primaryBlack
   },
 
   panamaImage: {
-    width: 300,
-    height: 200,
+    width: '90%',
+    height: height * 0.3,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: 'black',
+    borderColor: colors.greyBorder,
+    minHeight: 150,
+    maxHeight: 300,
   },
 
   prosContainer: { 
-    padding: 20, 
+    padding: width * 0.05, 
     alignItems: "center",
-    paddingBottom: 80, 
+    paddingBottom: height * 0.12, 
     position: 'relative'
   },
   prosHeader: { 
-    fontSize: 24, 
+    fontSize: Math.max(16, Math.min(width * 0.06, 24)), 
     fontWeight: "bold", 
-    marginBottom: 20 
+    marginBottom: width * 0.05, 
+    color: colors.primaryBlack
   },
   prosCard: { 
     width: "90%", 
-    padding: 15, 
-    marginBottom: 10, 
-    borderWidth: 1, 
+    padding: width * 0.04, 
+    marginBottom: height * 0.01, 
+    borderWidth: 2, 
     borderRadius: 10, 
-    alignItems: 'center'
+    alignItems: 'center',
+    borderColor: colors.greyBorder
   },
   prosCardTitle: { 
-    fontSize: 18, 
+    fontSize: Math.max(16, Math.min(width * 0.05, 22)),
     fontWeight: "bold", 
+    color: colors.primaryBlack
   },
   prosCardContent: { 
-    fontSize: 16, 
-    marginTop: 5,
+    fontSize: Math.max(14, Math.min(width * 0.045, 20)), 
+    marginTop: width * 0.02,
   },
   prosNavContainer: { 
     flexDirection: "row", 
     alignItems: "center", 
-    marginTop: 20 
+    marginTop: height * 0.02,
   },
   prosIndexText: {
-    fontSize: 18, 
-    marginHorizontal: 20 
+    fontSize: Math.max(14, Math.min(width * 0.045, 20)), 
+    marginHorizontal: width * 0.05 
   },
 
   shakeHintContainer: {
@@ -320,13 +323,13 @@ const styles = StyleSheet.create({
     right: '85%',
     transform: [{ rotate: '-45deg' }],
     backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    paddingHorizontal: width * 0.015,
+    paddingVertical: height * 0.005,
     borderRadius: 3,
   },
   shakeHintText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: width * 0.03,
     fontWeight: 'bold',
   }
 });
