@@ -108,14 +108,6 @@ function CriminalCheck({ route }) {
         <>
           <Text style={styles.infoText}>To do a criminal check, we will need a photo of your face to scan through our database. Either select an image from the gallery or take a photo.</Text>
           <PhotoActionButtons buttons={noImageButtons} />
-          {/*
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <Text style={styles.buttonText}>Pick an image from gallery</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={takePhoto}>
-            <Text style={styles.buttonText}>Take a photo</Text>
-          </TouchableOpacity>
-          */}
         </>
       )}
       {/* If image exists, display: header, image, row of buttons, info text*/}
@@ -124,19 +116,6 @@ function CriminalCheck({ route }) {
           <Text style={styles.headerText}>Looking good!</Text>
           <Image source={{ uri: selectedImage.localUri }} style={styles.image} />
           <PhotoActionButtons buttons={imageButtons} containerStyle={styles.rowContainer} />
-          {/*}
-          <View style={styles.rowContainer}>
-            <TouchableOpacity style={styles.buttonRow} onPress={pickImage}>
-              <Text style={styles.buttonText}>Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonRow} onPress={takePhoto}>
-              <Text style={styles.buttonText}>Camera</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.buttonRow, styles.deleteButton]}onPress={deletePhoto}>
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-          */}
           <Text style={styles.infoText}>Face not found in our database. Good news. You are not a criminal!</Text>
         </>
       )}

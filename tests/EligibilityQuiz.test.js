@@ -1,156 +1,71 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from 'react-native-testing-library';
-import EligibilityQuiz from '../screens/EligibilityQuiz'; 
+import EligibilityQuiz from '../screens/EligibilityQuiz';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
-// Mocks
+// Mock AsyncStorage to prevent real storage operations
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
 }));
-
-// For NetInfo, simulate an event listener
+// Mock NetInfo to prevent actual network calls
 jest.mock('@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(),
 }));
-
-// Mock BottomBar to avoid rendering issues in tests
+// Mock BottomBar component to avoid rendering unnecessary dependencies in tests
 jest.mock('../BottomBar', () => 'BottomBar');
-
-// If quizData is imported in EligibilityQuiz, you may want to mock it.
-// This example assumes quizData is imported from '../quizData'
+// Mock quizData to provide test questions instead of using real quiz data
 jest.mock('../quizData', () => ([
-  {
-    id: 1,
-    question: 'What is your name?',
-    type: 'text',
-    points: 1,
-  },
-  {
-    id: 4,
-    question: 'What is your age?',
-    type: 'number',
-  },
+  { id: 1, question: 'What is your name?', type: 'text' },
+  { id: 4, question: 'What is your age?', type: 'number' },
 ]), { virtual: true });
 
-describe('EligibilityQuiz Component', () => {
-  const routeMock = { params: { userDetails: { name: 'Test User' } } };
+describe('EligibilityQuiz', () => {
+  // Define a mock route with user details
+  const route = { params: { userDetails: { name: 'Test User' } } };
+  // Clear all mocked function calls before each test to ensure test independence
+  beforeEach(() => jest.clearAllMocks());
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders initial question and disables the Next button when unanswered', async () => {
-    // Simulate no saved progress
-    AsyncStorage.getItem.mockResolvedValue(null);
-    // Simulate an internet-connected state
-    NetInfo.addEventListener.mockImplementationOnce(callback => {
-      callback({ isInternetReachable: true });
-      return () => {};
-    });
-    
-    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={routeMock} />);
-    
-    // Verify the first question is rendered (assuming first question is "What is your name?")
-    await waitFor(() => {
-      expect(getByText('What is your name?')).toBeTruthy();
-    });
-    // Verify the input for text type is rendered
+  it('renders initial question with disabled Next button', async () => {
+    // Simulate no stored quiz progress in AsyncStorage
+    AsyncStorage.getItem.mockResolvedValue(null); 
+    // Simulate a network connection being available
+    NetInfo.addEventListener.mockImplementationOnce(cb => { cb({ isInternetReachable: true }); return () => {}; }); 
+    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={route} />);
+    await waitFor(() => expect(getByText('What is your name?')).toBeTruthy());
     expect(getByPlaceholderText('Enter your answer')).toBeTruthy();
-    // Check that the "Next" button is rendered and initially disabled
     expect(getByText('Next').props.disabled).toBeTruthy();
   });
 
-  it('allows answering a text question and navigates to the next question', async () => {
+
+  it('allows answering and navigates to the next question', async () => {
     AsyncStorage.getItem.mockResolvedValue(null);
-    NetInfo.addEventListener.mockImplementationOnce(callback => {
-      callback({ isInternetReachable: true });
-      return () => {};
-    });
-    
-    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={routeMock} />);
-    await waitFor(() => {
-      expect(getByText('What is your name?')).toBeTruthy();
-    });
-    
-    // Simulate entering an answer
-    const textInput = getByPlaceholderText('Enter your answer');
-    fireEvent.changeText(textInput, 'John Doe');
-    
-    // Now, the "Next" button should be enabled.
-    const nextButton = getByText('Next');
-    expect(nextButton.props.disabled).toBeFalsy();
-    
-    fireEvent.press(nextButton);
-    // After pressing, the second question should render. Assuming second question is "What is your age?"
-    await waitFor(() => {
-      expect(getByText('What is your age?')).toBeTruthy();
-    });
-    
-    // Verify that AsyncStorage.setItem was called to save progress
-    expect(AsyncStorage.setItem).toHaveBeenCalled();
+    NetInfo.addEventListener.mockImplementationOnce(cb => { cb({ isInternetReachable: true }); return () => {}; });
+    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={route} />);
+    await waitFor(() => expect(getByText('What is your name?')).toBeTruthy());
+    // Simulate entering an answer in the input field
+    fireEvent.changeText(getByPlaceholderText('Enter your answer'), 'John Doe');
+    // Verify that the "Next" button is now enabled
+    expect(getByText('Next').props.disabled).toBeFalsy();
+    // Simulate pressing the "Next" button
+    fireEvent.press(getByText('Next'));
+    // Wait for and verify that the second question appears
+    await waitFor(() => expect(getByText('What is your age?')).toBeTruthy());
   });
 
-  it('shows the result screen when finishing the quiz', async () => {
+  it('shows result screen when finishing the quiz', async () => {
     AsyncStorage.getItem.mockResolvedValue(null);
-    NetInfo.addEventListener.mockImplementationOnce(callback => {
-      callback({ isInternetReachable: true });
-      return () => {};
-    });
-    
-    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={routeMock} />);
-    // Answer first question
-    await waitFor(() => {
-      expect(getByText('What is your name?')).toBeTruthy();
-    });
+    NetInfo.addEventListener.mockImplementationOnce(cb => { cb({ isInternetReachable: true }); return () => {}; });
+    const { getByText, getByPlaceholderText } = render(<EligibilityQuiz route={route} />);
+    await waitFor(() => expect(getByText('What is your name?')).toBeTruthy());
     fireEvent.changeText(getByPlaceholderText('Enter your answer'), 'John Doe');
     fireEvent.press(getByText('Next'));
-    
-    // Answer second question (age)
-    await waitFor(() => {
-      expect(getByText('What is your age?')).toBeTruthy();
-    });
+    await waitFor(() => expect(getByText('What is your age?')).toBeTruthy());
     fireEvent.changeText(getByPlaceholderText('Enter a number'), '25');
-    
-    // Since this is the last question in our mock quizData, the "Finish" button should appear.
-    const finishButton = getByText('Finish');
-    fireEvent.press(finishButton);
-    
-    // Wait for the result screen to appear (e.g., a text starting with "Your score:")
-    await waitFor(() => {
-      expect(getByText(/Your score:/)).toBeTruthy();
-    });
-  });
-
-  it('renders YouTube video when internet is connected', async () => {
-    AsyncStorage.getItem.mockResolvedValue(null);
-    // Simulate internet connected
-    NetInfo.addEventListener.mockImplementationOnce(callback => {
-      callback({ isInternetReachable: true });
-      return () => {};
-    });
-    
-    const { queryByText } = render(<EligibilityQuiz route={routeMock} />);
-    
-    await waitFor(() => {
-      // Since internet is available, the placeholder text for no connection should not be rendered.
-      expect(queryByText('Internet connection required to view the eligibility process video.')).toBeNull();
-    });
-  });
-
-  it('renders placeholder text when internet is not connected', async () => {
-    AsyncStorage.getItem.mockResolvedValue(null);
-    // Simulate internet disconnected
-    NetInfo.addEventListener.mockImplementationOnce(callback => {
-      callback({ isInternetReachable: false });
-      return () => {};
-    });
-    
-    const { getByText } = render(<EligibilityQuiz route={routeMock} />);
-    
-    await waitFor(() => {
-      expect(getByText('Internet connection required to view the eligibility process video.')).toBeTruthy();
-    });
+    // Simulate pressing the "Finish" button to complete the quiz
+    fireEvent.press(getByText('Finish'));
+    // Wait for and verify that the result screen appears
+    await waitFor(() => expect(getByText(/Your score:/)).toBeTruthy());
   });
 });

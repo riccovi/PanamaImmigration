@@ -88,17 +88,6 @@ function Settings({ route, navigation }){
                             </View>
                         </TouchableOpacity>} />
                 </Section>
-                {/* Display Header */}
-                {/*
-                <Section header="Display" headerTextStyle={styles.headerText}>
-                    <Cell cellContentView={
-                        <View style={styles.menuItem}>
-                            <Text style={styles.menuItemText}>Font Size</Text>
-                            <Slider style={styles.slider} minimumValue={12} maximumValue={24} step={1} value={fontSize} onValueChange={(value) => setFontSize(value)}/>
-                            <Text style={styles.fontSizeLabel}>{fontSize}px</Text>
-                        </View>} />
-                </Section>
-                */}
                 {/* Account Header */}
                 <Section header="Account" headerTextStyle={styles.headerText}>
                     {/* Details */}
