@@ -6,7 +6,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest",
+    "test:updateSnapshots":"jest -u"
+
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -25,6 +28,8 @@
     "expo-location": "~18.0.7",
     "expo-sensors": "^14.0.2",
     "expo-status-bar": "~2.0.1",
+    "jest": "^29.7.0",
+    "jest-expo": "^52.0.5",
     "luxon": "^3.5.0",
     "react": "18.3.1",
     "react-native": "0.76.7",
@@ -35,6 +40,7 @@
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-tableview-simple": "^4.4.1",
+    "react-native-testing-library": "^2.2.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-webview": "^13.13.2",
     "react-native-youtube-iframe": "^2.3.0",
@@ -42,6 +48,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
+  },
+  "jest": {
+    "preset": "jest-expo/universal"
   },
   "private": true
 }
