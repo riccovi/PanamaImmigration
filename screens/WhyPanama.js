@@ -78,7 +78,7 @@ function WhyPanama({ route }){
   
   // Accelerometer subscription for shake detection
   useEffect(() => {
-    const shakeThreshold = 1.7; // Adjust this threshold based on testing
+    const shakeThreshold = 1.7; 
     const subscription = Accelerometer.addListener(accData => {
       const { x, y, z } = accData;
       const totalAcc = Math.sqrt(x * x + y * y + z * z);
